@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil Profesional - EduRecom{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="profile-hero mb-4">
+            <div class="profile-hero-content text-center text-white py-5">
+                <h2 class="display-5 fw-bold mb-3">
+                    <i class="fas fa-user-edit me-3"></i>
+                    Perfil Profesional
+                </h2>
+                <p class="lead">
+                    Completa tu perfil para recibir recomendaciones personalizadas de formación
+                </p>
+            </div>
+        </div>
+        <div class="card modern-card">
+            <div class="card-header bg-transparent border-0 pt-4">
+                <h5 class="mb-0">Formulario de Perfil</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    {% for q in questions %}
+                        <div class="mb-3">
+                            {% if q.type == 'select' %}
+                                {{ form[q.name].label(class="form-label") }}
+                                {{ form[q.name](class="form-select" + (" is-invalid" if form[q.name].errors else "")) }}
+                            {% elif q.type == 'text' %}
+                                {{ form[q.name].label(class="form-label") }}
+                                {{ form[q.name](class="form-control" + (" is-invalid" if form[q.name].errors else "")) }}
+                            {% elif q.type == 'boolean' %}
+                                <div class="form-check">
+                                    {{ form[q.name](class="form-check-input") }}
+                                    {{ form[q.name].label(class="form-check-label") }}
+                                </div>
+                            {% endif %}
+                            {% if form[q.name].errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form[q.name].errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

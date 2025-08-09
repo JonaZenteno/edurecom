@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Configuración Algoritmo - Admin{% endblock %}
+{% block content %}
+<h2 class="mb-4">Configuración del Algoritmo de Clustering</h2>
+<form method="post">
+  {{ form.hidden_tag() }}
+  <div class="mb-3">
+    {{ form.n_clusters.label(class="form-label") }}
+    {{ form.n_clusters(class="form-control", min=2, max=20) }}
+  </div>
+  <div class="mb-3">
+    {{ form.confidence_threshold.label(class="form-label") }}
+    {{ form.confidence_threshold(class="form-control", step=0.01, min=0, max=1) }}
+    <div class="form-text">Ejemplo recomendado: 0.7</div>
+  </div>
+  <button type="submit" class="btn btn-primary">Guardar configuración</button>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light ms-2">Volver al Dashboard</a>
+</form>
+{% endblock %}

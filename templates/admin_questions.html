@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Editar Preguntas del Formulario{% endblock %}
+{% block content %}
+<h2 class="mb-4">Gestión de Preguntas del Formulario de Perfil</h2>
+<table class="table table-dark table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Tipo</th>
+      <th>Etiqueta</th>
+      <th>Opciones</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in questions %}
+    <tr>
+      <td>{{ loop.index0 }}</td>
+      <td>{{ q.name }}</td>
+      <td>{{ q.type }}</td>
+      <td>{{ q.label }}</td>
+      <td>{{ q.choices|join(', ') }}</td>
+      <td>
+        <form method="post" style="display:inline;">
+          <input type="hidden" name="idx" value="{{ loop.index0 }}">
+          <input type="hidden" name="action" value="delete">
+          <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+        </form>
+        <!-- Botón de edición (modal o inline, aquí solo ejemplo simple) -->
+        <button class="btn btn-sm btn-warning" onclick="showEditForm({{ loop.index0 }}, '{{ q.name }}', '{{ q.type }}', '{{ q.label }}', '{{ q.choices|join(',') }}')">Editar</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<hr>
+<h4>Agregar nueva pregunta</h4>
+<form method="post">
+  <input type="hidden" name="action" value="add">
+  <div class="row g-2">
+    <div class="col-md-2"><input type="text" name="name" class="form-control" placeholder="Nombre" required></div>
+    <div class="col-md-2">
+      <select name="type" class="form-select" required>
+        <option value="select">Select</option>
+        <option value="text">Text</option>
+        <option value="boolean">Boolean</option>
+      </select>
+    </div>
+    <div class="col-md-4"><input type="text" name="label" class="form-control" placeholder="Etiqueta" required></div>
+    <div class="col-md-3"><input type="text" name="choices" class="form-control" placeholder="Opciones (separadas por coma)"></div>
+    <div class="col-md-1"><button type="submit" class="btn btn-success">Agregar</button></div>
+  </div>
+</form>
+<!-- Formulario de edición (modal simple) -->
+<div id="editForm" style="display:none; margin-top:2em;">
+  <h4>Editar pregunta</h4>
+  <form method="post">
+    <input type="hidden" name="action" value="edit">
+    <input type="hidden" name="idx" id="editIdx">
+    <div class="row g-2">
+      <div class="col-md-2"><input type="text" name="name" id="editName" class="form-control" required></div>
+      <div class="col-md-2">
+        <select name="type" id="editType" class="form-select" required>
+          <option value="select">Select</option>
+          <option value="text">Text</option>
+          <option value="boolean">Boolean</option>
+        </select>
+      </div>
+      <div class="col-md-4"><input type="text" name="label" id="editLabel" class="form-control" required></div>
+      <div class="col-md-3"><input type="text" name="choices" id="editChoices" class="form-control"></div>
+      <div class="col-md-1"><button type="submit" class="btn btn-primary">Guardar</button></div>
+    </div>
+  </form>
+  <button class="btn btn-secondary mt-2" onclick="document.getElementById('editForm').style.display='none'">Cancelar</button>
+</div>
+<script>
+function showEditForm(idx, name, type, label, choices) {
+  document.getElementById('editForm').style.display = 'block';
+  document.getElementById('editIdx').value = idx;
+  document.getElementById('editName').value = name;
+  document.getElementById('editType').value = type;
+  document.getElementById('editLabel').value = label;
+  document.getElementById('editChoices').value = choices;
+  window.scrollTo(0, document.body.scrollHeight);
+}
+</script>
+<a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light mt-4">Volver al Dashboard</a>
+{% endblock %}
