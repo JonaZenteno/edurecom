@@ -1,5 +1,5 @@
 """
-Configuración centralizada para CourseConnect
+Configuración centralizada para EduRecom
 """
 import os
 from pathlib import Path

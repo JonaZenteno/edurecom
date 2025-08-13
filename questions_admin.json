@@ -9,7 +9,7 @@
     "name": "school_type",
     "type": "select",
     "label": "¿Qué tipo de establecimiento educas?",
-    "choices": ["rural", "urbana", "cientifico-humanistica", "tecnico-profesional"]
+    "choices": ["rural", "urbana", "cientifico-humanista", "tecnico-profesional"]
   },
   {
     "name": "dependency",

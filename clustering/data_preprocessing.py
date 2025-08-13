@@ -164,7 +164,7 @@ class DataPreprocessor:
         roles = ['profesor', 'director', 'asistente']
         profile['role'] = np.random.choice(roles)
         
-        school_types = ['rural', 'urbana', 'cientifico-humanistica', 'tecnico-profesional']
+        school_types = ['rural', 'urbana', 'cientifico-humanista', 'tecnico-profesional']
         profile['school_type'] = np.random.choice(school_types)
         
         dependencies = ['municipal', 'privada-subvencionada', 'privada-pagada']

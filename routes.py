@@ -104,7 +104,11 @@ def register_routes(app):
             pass
         for q in questions:
             if q['type'] == 'select':
-                choices = [(c, c) for c in q.get('choices', [])]
+                choices_data = q.get('choices', [])
+                if choices_data and isinstance(choices_data[0], dict):
+                    choices = [(c['value'], c['label']) for c in choices_data]
+                else:
+                    choices = [(c, c) for c in choices_data]
                 setattr(DynamicProfileForm, q['name'], SelectField(q['label'], choices=choices, validators=[DataRequired()]))
             elif q['type'] == 'text':
                 setattr(DynamicProfileForm, q['name'], StringField(q['label'], validators=[DataRequired()]))

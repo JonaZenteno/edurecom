@@ -16,9 +16,9 @@ class UserProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
-    # Basic info
+    # Información básica
     role = db.Column(db.String(50), nullable=False)  # profesor, director, asistente
-    school_type = db.Column(db.String(50), nullable=False)  # rural, urbana, cientifico-humanistica, tecnico-profesional
+    school_type = db.Column(db.String(50), nullable=False)  # rural, urbana, cientifico-humanista, tecnico-profesional
     dependency = db.Column(db.String(50), nullable=False)  # municipal, privada-subvencionada, privada-pagada
     age_range = db.Column(db.String(20), nullable=False)  # 20-30, 31-40, 41-50, 51+
     

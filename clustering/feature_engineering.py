@@ -71,7 +71,7 @@ class FeatureEngineer:
         encoding = {
             'rural': 1,
             'urbana': 2, 
-            'cientifico-humanistica': 3,
+            'cientifico-humanista': 3,
             'tecnico-profesional': 4
         }
         return school_type_series.map(encoding)

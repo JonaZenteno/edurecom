@@ -38,19 +38,19 @@ class ProfileForm(FlaskForm):
         ('asistente', 'Asistente de la educación')
     ])
     
-    school_type = SelectField('¿Qué tipo de establecimiento educativo es?', validators=[DataRequired()], choices=[
+    school_type = SelectField('¿En qué tipo de establecimiento educativo es?', validators=[DataRequired()], choices=[
         ('', 'Selecciona una opción'),
         ('rural', 'Escuela rural'),
         ('urbana', 'Escuela urbana'),
-        ('cientifico-humanistica', 'Liceo científico-humanístico'),
+        ('cientifico-humanista', 'Liceo científico-humanista'),
         ('tecnico-profesional', 'Liceo técnico-profesional')
     ])
     
     dependency = SelectField('¿Cuál es la dependencia del establecimiento?', validators=[DataRequired()], choices=[
         ('', 'Selecciona una opción'),
         ('municipal', 'Municipal'),
-        ('privada-subvencionada', 'Privada subvencionada'),
-        ('privada-pagada', 'Privada pagada')
+        ('privada-subvencionada', 'Particular subvencionada'),
+        ('privada-pagada', 'Particular pagada')
     ])
     
     age_range = SelectField('¿En qué rango de edad te encuentras?', validators=[DataRequired()], choices=[

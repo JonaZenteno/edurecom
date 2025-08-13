@@ -1,4 +1,4 @@
-# Clustering module for CourseConnect
+# Clustering module for EduRecom
 from .data_preprocessing import DataPreprocessor
 from .feature_engineering import FeatureEngineer
 from .clustering_engine import ClusteringEngine
