@@ -69,74 +69,125 @@ class AutoAssignment:
         """
         Prepara el perfil del usuario para clustering
         """
-        # Crear DataFrame con el perfil del usuario, manejando valores None
-        profile_data = {
-            'digital_tools_skill': [user_profile.digital_tools_skill or 3],
-            'advanced_tic_skill': [user_profile.advanced_tic_skill or 3],
-            'digital_citizenship_skill': [user_profile.digital_citizenship_skill or 3],
-            'teaching_tech_skill': [user_profile.teaching_tech_skill or 3],
-            'leadership_support': [user_profile.leadership_support or 3],
-            'resource_support': [user_profile.resource_support or 3],
-            'role': [user_profile.role or 'profesor'],
-            'school_type': [user_profile.school_type or 'urbana'],
-            'dependency': [user_profile.dependency or 'municipal'],
-            'age_range': [user_profile.age_range or '31-40'],
-            'learning_format': [user_profile.learning_format or 'en-linea'],
-            'interest_digital_literacy': [user_profile.interest_digital_literacy or False],
-            'interest_educational_innovation': [user_profile.interest_educational_innovation or False],
-            'interest_leadership': [user_profile.interest_leadership or False]
-        }
-        
-        df = pd.DataFrame(profile_data)
-        
-        # Aplicar preprocesamiento
-        if self.feature_engineer:
-            df_processed = self.feature_engineer.create_clustering_features(df)
-        else:
-            # Preprocesamiento básico si no hay feature engineer
+        try:
+            if not user_profile:
+                print("❌ Error: Perfil de usuario es None")
+                return None
+            
+            # Crear DataFrame con el perfil del usuario, manejando valores None
+            profile_data = {
+                'digital_tools_skill': [user_profile.digital_tools_skill or 3],
+                'advanced_tic_skill': [user_profile.advanced_tic_skill or 3],
+                'digital_citizenship_skill': [user_profile.digital_citizenship_skill or 3],
+                'teaching_tech_skill': [user_profile.teaching_tech_skill or 3],
+                'leadership_support': [user_profile.leadership_support or 3],
+                'resource_support': [user_profile.resource_support or 3],
+                'role': [user_profile.role or 'profesor'],
+                'school_type': [user_profile.school_type or 'urbana'],
+                'dependency': [user_profile.dependency or 'municipal'],
+                'age_range': [user_profile.age_range or '31-40'],
+                'learning_format': [user_profile.learning_format or 'en-linea'],
+                'interest_digital_literacy': [getattr(user_profile, 'interest_digital_literacy', False) or False],
+                'interest_educational_innovation': [getattr(user_profile, 'interest_educational_innovation', False) or False],
+                'interest_leadership': [getattr(user_profile, 'interest_leadership', False) or False]
+            }
+            
+            df = pd.DataFrame(profile_data)
+            print(f"📊 Perfil preparado: {df.shape}")
+            
+            # Aplicar preprocesamiento
+            if self.feature_engineer:
+                try:
+                    df_processed = self.feature_engineer.create_clustering_features(df)
+                    print("✅ Características de clustering creadas")
+                except Exception as e:
+                    print(f"❌ Error creando características: {e}")
+                    # Fallback a preprocesamiento básico
+                    df_processed = self._basic_preprocessing(df)
+            else:
+                # Preprocesamiento básico si no hay feature engineer
+                df_processed = self._basic_preprocessing(df)
+            
+            return df_processed
+            
+        except Exception as e:
+            print(f"❌ Error en prepare_user_profile: {e}")
+            return None
+    
+    def _basic_preprocessing(self, df):
+        """
+        Preprocesamiento básico cuando no hay feature engineer
+        """
+        try:
             numeric_cols = ['digital_tools_skill', 'advanced_tic_skill', 'digital_citizenship_skill', 
                            'teaching_tech_skill', 'leadership_support', 'resource_support']
             boolean_cols = ['interest_digital_literacy', 'interest_educational_innovation', 'interest_leadership']
             
             # Convertir booleanos a numéricos
             for col in boolean_cols:
-                df[col] = df[col].astype(int)
+                if col in df.columns:
+                    df[col] = df[col].astype(int)
             
             # Normalizar variables numéricas
-            df[numeric_cols] = self.scaler.fit_transform(df[numeric_cols])
-            df_processed = df[numeric_cols + boolean_cols]
-        
-        return df_processed
+            if numeric_cols:
+                df[numeric_cols] = self.scaler.fit_transform(df[numeric_cols])
+                df_processed = df[numeric_cols + boolean_cols]
+            else:
+                df_processed = df
+            
+            print("✅ Preprocesamiento básico completado")
+            return df_processed
+            
+        except Exception as e:
+            print(f"❌ Error en preprocesamiento básico: {e}")
+            return df
     
     def assign_group(self, user_profile):
         """
         Asigna automáticamente un grupo de formación al usuario
         """
-        if not self.is_trained:
-            if not self.load_model():
-                print("❌ No se pudo cargar el modelo. Usando asignación manual.")
-                return self._manual_assignment(user_profile)
-        
         try:
+            if not user_profile:
+                print("❌ Error: Perfil de usuario es None")
+                return self._manual_assignment(user_profile)
+            
+            if not self.is_trained:
+                if not self.load_model():
+                    print("❌ No se pudo cargar el modelo. Usando asignación manual.")
+                    return self._manual_assignment(user_profile)
+            
             # Preparar perfil del usuario
-            profile_df = self.prepare_user_profile(user_profile)
+            try:
+                profile_df = self.prepare_user_profile(user_profile)
+                if profile_df is None or profile_df.empty:
+                    print("❌ Error al preparar perfil del usuario")
+                    return self._manual_assignment(user_profile)
+            except Exception as e:
+                print(f"❌ Error preparando perfil: {e}")
+                return self._manual_assignment(user_profile)
             
             # Predecir cluster
-            cluster_prediction = self.clustering_model.predict(profile_df)
-            cluster_id = cluster_prediction[0]
+            try:
+                cluster_prediction = self.clustering_model.predict(profile_df)
+                cluster_id = cluster_prediction[0]
+                print(f"🔍 Cluster predicho: {cluster_id}")
+            except Exception as e:
+                print(f"❌ Error prediciendo cluster: {e}")
+                return self._manual_assignment(user_profile)
             
             # Mapear cluster a grupo de formación
             if self.cluster_mapping and cluster_id in self.cluster_mapping:
                 assigned_group = self.cluster_mapping[cluster_id]
+                print(f"🤖 Asignación automática: Cluster {cluster_id} → {assigned_group}")
             else:
                 # Fallback a asignación manual
+                print(f"⚠️  Cluster {cluster_id} no encontrado en mapeo, usando manual")
                 assigned_group = self._manual_assignment(user_profile)
             
-            print(f"🤖 Asignación automática: Cluster {cluster_id} → {assigned_group}")
             return assigned_group
             
         except Exception as e:
-            print(f"❌ Error en asignación automática: {e}")
+            print(f"❌ Error general en asignación automática: {e}")
             print("🔄 Usando asignación manual como fallback")
             return self._manual_assignment(user_profile)
     

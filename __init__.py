@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
 import os
+import logging
 
 class Base(DeclarativeBase):
     pass
@@ -35,8 +36,21 @@ def create_app():
         from models import User
         return User.query.get(int(user_id))
 
+    # Setup logging
+    try:
+        from logging_config import setup_logging
+        setup_logging(app)
+        app.logger.info("Logging configurado exitosamente")
+    except Exception as e:
+        app.logger.error(f"Error configurando logging: {e}")
+
     # Import and register routes
-    from routes import register_routes
-    register_routes(app)
+    try:
+        from routes import register_routes
+        register_routes(app)
+        app.logger.info("Rutas registradas exitosamente")
+    except Exception as e:
+        app.logger.error(f"Error registrando rutas: {e}")
+        raise
 
     return app 

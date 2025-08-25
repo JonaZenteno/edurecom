@@ -45,7 +45,7 @@
             <div class="col-lg-4">
                 <div class="feature-card text-center h-100">
                     <div class="feature-icon mb-4">
-                        <i class="fas fa-user-check fa-3x text-primary"></i>
+                        <img src="{{ url_for('static', filename='images/CP.svg') }}" alt="Completa tu Perfil" class="feature-svg-icon">
                     </div>
                     <h5 class="card-title mb-3">1. Completa tu Perfil</h5>
                     <p class="card-text text-muted">
@@ -56,7 +56,7 @@
             <div class="col-lg-4">
                 <div class="feature-card text-center h-100">
                     <div class="feature-icon mb-4">
-                        <i class="fas fa-brain fa-3x text-success"></i>
+                        <img src="{{ url_for('static', filename='images/AI.svg') }}" alt="Análisis Inteligente" class="feature-svg-icon">
                     </div>
                     <h5 class="card-title mb-3">2. Análisis Inteligente</h5>
                     <p class="card-text text-muted">
@@ -67,7 +67,7 @@
             <div class="col-lg-4">
                 <div class="feature-card text-center h-100">
                     <div class="feature-icon mb-4">
-                        <i class="fas fa-graduation-cap fa-3x text-warning"></i>
+                        <img src="{{ url_for('static', filename='images/RR.svg') }}" alt="Recibe Recomendaciones" class="feature-svg-icon">
                     </div>
                     <h5 class="card-title mb-3">3. Recibe Recomendaciones</h5>
                     <p class="card-text text-muted">
@@ -111,29 +111,49 @@
 
         <div class="text-center mt-5">
             <h3 class="mb-4">Grupos de Formación Disponibles</h3>
-            <div class="row g-3">
-                <div class="col-sm-6 col-lg-3">
-                    <div class="badge bg-primary fs-6 p-3 w-100">
-                        <i class="fas fa-laptop-code d-block mb-2"></i>
-                        Alfabetización Digital Básica
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="group-card card h-100">
+                        <div class="card-body text-center">
+                            <img src="{{ url_for('static', filename='images/AD.svg') }}" alt="Alfabetización Digital" class="group-icon mb-3">
+                            <h5 class="card-title">Alfabetización Digital Básica</h5>
+                            <p class="card-text text-muted">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="badge bg-info fs-6 p-3 w-100">
-                        <i class="fas fa-building d-block mb-2"></i>
-                        Fortalecimiento Institucional
+                <div class="col-md-6">
+                    <div class="group-card card h-100">
+                        <div class="card-body text-center">
+                            <img src="{{ url_for('static', filename='images/FI.svg') }}" alt="Fortalecimiento Institucional" class="group-icon mb-3">
+                            <h5 class="card-title">Fortalecimiento Institucional</h5>
+                            <p class="card-text text-muted">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="badge bg-success fs-6 p-3 w-100">
-                        <i class="fas fa-lightbulb d-block mb-2"></i>
-                        Innovación Educativa
+                <div class="col-md-6">
+                    <div class="group-card card h-100">
+                        <div class="card-body text-center">
+                            <img src="{{ url_for('static', filename='images/IE.svg') }}" alt="Innovación Educativa" class="group-icon mb-3">
+                            <h5 class="card-title">Innovación Educativa</h5>
+                            <p class="card-text text-muted">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit.
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-3">
-                    <div class="badge bg-warning fs-6 p-3 w-100">
-                        <i class="fas fa-cogs d-block mb-2"></i>
-                        Habilidades Digitales Avanzadas
+                <div class="col-md-6">
+                    <div class="group-card card h-100">
+                        <div class="card-body text-center">
+                            <img src="{{ url_for('static', filename='images/HDA.svg') }}" alt="Habilidades Digitales Avanzadas" class="group-icon mb-3">
+                            <h5 class="card-title">Habilidades Digitales Avanzadas</h5>
+                            <p class="card-text text-muted">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

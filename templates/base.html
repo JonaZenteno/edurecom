@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="dark">
+<html lang="es" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,13 +12,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
-                <div class="brand-logo me-3">
-                    <i class="fas fa-graduation-cap fa-2x text-white"></i>
-                </div>
-                <div class="brand-text">
-                    <h5 class="mb-0 text-white fw-bold">EduRecom</h5>
-                    <small class="text-light opacity-75">Sistema Inteligente</small>
-                </div>
+                <img src="{{ url_for('static', filename='images/Recurso 3.svg') }}" alt="EduRecom Logo" height="50">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -85,18 +79,12 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-dark text-light py-5 mt-5">
+    <footer class="bg-light text-dark py-5 mt-5 border-top">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="brand-logo me-3">
-                            <i class="fas fa-graduation-cap fa-2x text-primary"></i>
-                        </div>
-                        <div>
-                            <h5 class="mb-0 text-white fw-bold">EduRecom</h5>
-                            <small class="text-light opacity-75">Sistema Inteligente</small>
-                        </div>
+                        <img src="{{ url_for('static', filename='images/Recurso 3.svg') }}" alt="EduRecom Logo" height="50">
                     </div>
                     <p class="text-muted">
                         Transformando la educación a través de recomendaciones personalizadas de formación continua.
@@ -131,9 +119,9 @@
                     </div>
                 </div>
             </div>
-            <hr class="border-secondary my-4">
+            <hr class="my-4">
             <div class="text-center">
-                <p class="mb-0 text-muted">
+                <p class="mb-0 text-secondary">
                     © 2025 EduRecom - Sistema Inteligente de Recomendación de Formación
                 </p>
             </div>

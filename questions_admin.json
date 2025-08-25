@@ -3,67 +3,125 @@
     "name": "role",
     "type": "select",
     "label": "¿Cuál es tu rol en el establecimiento educativo?",
-    "choices": ["profesor", "director", "asistente"]
+    "choices": [
+      "profesor",
+      "director",
+      "asistente"
+    ]
   },
   {
     "name": "school_type",
     "type": "select",
-    "label": "¿Qué tipo de establecimiento educas?",
-    "choices": ["rural", "urbana", "cientifico-humanista", "tecnico-profesional"]
+    "label": "¿En qué tipo de establecimiento educas?",
+    "choices": [
+      "rural",
+      "urbana",
+      "cientifico-humanista",
+      "tecnico-profesional"
+    ]
   },
   {
     "name": "dependency",
     "type": "select",
     "label": "¿Cuál es la dependencia de tu establecimiento?",
-    "choices": ["municipal", "privada-subvencionada", "privada-pagada"]
+    "choices": [
+      "municipal",
+      "particular-subvencionada",
+      "particular-pagada"
+    ]
   },
   {
     "name": "age_range",
     "type": "select",
     "label": "¿En qué rango de edad te encuentras?",
-    "choices": ["20-30", "31-40", "41-50", "51+"]
+    "choices": [
+      "20-30",
+      "31-40",
+      "41-50",
+      "51+"
+    ]
   },
   {
     "name": "digital_tools_skill",
     "type": "select",
     "label": "Herramientas TI básicas (1-5)",
-    "choices": ["1", "2", "3", "4", "5"]
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
   },
   {
     "name": "advanced_tic_skill",
     "type": "select",
     "label": "TIC avanzadas (1-5)",
-    "choices": ["1", "2", "3", "4", "5"]
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
   },
   {
     "name": "digital_citizenship_skill",
     "type": "select",
     "label": "Ciudadanía digital (1-5)",
-    "choices": ["1", "2", "3", "4", "5"]
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
   },
   {
     "name": "teaching_tech_skill",
     "type": "select",
     "label": "Uso de tecnología en enseñanza (1-5)",
-    "choices": ["1", "2", "3", "4", "5"]
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
   },
   {
     "name": "leadership_support",
     "type": "select",
     "label": "Liderazgo institucional (1-5)",
-    "choices": ["1", "2", "3", "4", "5"]
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
   },
   {
     "name": "resource_support",
     "type": "select",
     "label": "Recursos disponibles (1-5)",
-    "choices": ["1", "2", "3", "4", "5"]
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
   },
   {
     "name": "learning_format",
     "type": "select",
     "label": "¿Qué formato de aprendizaje prefieres?",
-    "choices": ["en-linea", "talleres", "autoaprendizaje"]
+    "choices": [
+      "en linea",
+      "talleres",
+      "autoaprendizaje"
+    ]
   },
   {
     "name": "interest_digital_literacy",
@@ -80,4 +138,4 @@
     "type": "boolean",
     "label": "¿Te interesa el liderazgo educativo?"
   }
-] 
+]

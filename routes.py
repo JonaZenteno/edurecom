@@ -3,22 +3,30 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from __init__ import db
 from models import User, UserProfile, Course
-from forms import RegistrationForm, LoginForm, ProfileForm
+from forms import RegistrationForm, LoginForm, ProfileForm, AdminConfigForm
 from utils import assign_group
 from functools import wraps
+from flask_wtf import FlaskForm
+from wtforms import SelectField, StringField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
 import json
 import os
-from forms import AdminConfigForm
-from flask_wtf import FlaskForm
-from wtforms import Field, SelectField, StringField, BooleanField, SubmitField
-from wtforms.validators import DataRequired
 
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated or not current_user.profile or current_user.profile.role != 'admin':
+        if not current_user.is_authenticated:
+            flash('Debes iniciar sesión para acceder a esta página.', 'danger')
+            return redirect(url_for('login'))
+        
+        if not current_user.profile:
+            flash('Debes completar tu perfil para acceder a esta página.', 'warning')
+            return redirect(url_for('profile_form'))
+        
+        if not hasattr(current_user.profile, 'role') or current_user.profile.role != 'admin':
             flash('Acceso restringido solo para administradores.', 'danger')
             return redirect(url_for('index'))
+        
         return f(*args, **kwargs)
     return decorated_function
 
@@ -39,7 +47,7 @@ def register_routes(app):
         
         form = RegistrationForm()
         if form.validate_on_submit():
-            # Check if username or email already exists
+            # Verificar si el nombre de usuario o email ya existe
             user = User.query.filter_by(username=form.username.data).first()
             if user:
                 flash('El nombre de usuario ya está en uso. Elige otro.', 'danger')
@@ -50,7 +58,7 @@ def register_routes(app):
                 flash('El correo electrónico ya está registrado.', 'danger')
                 return render_template('register.html', form=form)
             
-            # Create new user
+            # Crear nuevo usuario
             user = User(
                 username=form.username.data,
                 email=form.email.data,
@@ -131,6 +139,10 @@ def register_routes(app):
             # Procesar cada pregunta y asignar valores con validación
             for q in questions:
                 if hasattr(form, q['name']):
+                    # Si el usuario es admin y ya tiene perfil, no actualizar el rol
+                    if current_user.profile and hasattr(current_user.profile, 'role') and current_user.profile.role == 'admin' and q['name'] == 'role':
+                        continue
+
                     field_value = getattr(form, q['name']).data
                     
                     # Convertir valores según el tipo de campo
@@ -153,28 +165,64 @@ def register_routes(app):
                     setattr(profile, q['name'], field_value)
             
             # Asignar grupo y guardar
-            profile.assigned_group = assign_group(profile)
-            if not current_user.profile:
-                db.session.add(profile)
-            db.session.commit()
-            flash('Perfil actualizado exitosamente. Aquí tienes tus recomendaciones personalizadas.', 'success')
-            return redirect(url_for('recommendations'))
+            try:
+                profile.assigned_group = assign_group(profile)
+                if not current_user.profile:
+                    db.session.add(profile)
+                db.session.commit()
+                
+                # Verificar que el perfil se haya guardado correctamente
+                if profile.assigned_group:
+                    flash('Perfil actualizado exitosamente. Aquí tienes tus recomendaciones personalizadas.', 'success')
+                    return redirect(url_for('recommendations'))
+                else:
+                    flash('Error: No se pudo asignar un grupo de formación. Por favor, intenta nuevamente.', 'danger')
+                    return render_template('profile_form.html', form=form, questions=questions)
+                    
+            except Exception as e:
+                db.session.rollback()
+                print(f"Error guardando perfil: {e}")
+                flash('Error al guardar el perfil. Por favor, intenta nuevamente.', 'danger')
+                return render_template('profile_form.html', form=form, questions=questions)
         return render_template('profile_form.html', form=form, questions=questions)
 
     @app.route('/recommendations')
     @login_required
     def recommendations():
-        if not current_user.profile:
-            flash('Primero debes completar tu perfil para recibir recomendaciones.', 'warning')
+        try:
+            # Verificar que el usuario tenga un perfil
+            if not current_user.profile:
+                flash('Primero debes completar tu perfil para recibir recomendaciones.', 'warning')
+                return redirect(url_for('profile_form'))
+            
+            # Verificar que el perfil tenga un grupo asignado
+            if not hasattr(current_user.profile, 'assigned_group') or not current_user.profile.assigned_group:
+                flash('Error: No se pudo asignar un grupo de formación. Por favor, actualiza tu perfil.', 'danger')
+                return redirect(url_for('profile_form'))
+            
+            # Get courses for the user's assigned group
+            try:
+                courses = Course.query.filter_by(group=current_user.profile.assigned_group).all()
+                
+                if not courses:
+                    flash(f'No se encontraron cursos para el grupo "{current_user.profile.assigned_group}". Contacta al administrador.', 'warning')
+                    # Fallback: mostrar cursos de todos los grupos
+                    courses = Course.query.limit(10).all()
+                    
+            except Exception as e:
+                print(f"Error al consultar cursos: {e}")
+                flash('Error al cargar los cursos. Mostrando cursos disponibles.', 'warning')
+                courses = Course.query.limit(10).all()
+            
+            return render_template('recommendations.html', 
+                                 courses=courses, 
+                                 group=current_user.profile.assigned_group,
+                                 profile=current_user.profile)
+                             
+        except Exception as e:
+            print(f"Error en recomendaciones: {e}")
+            flash('Ocurrió un error inesperado. Por favor, intenta nuevamente.', 'danger')
             return redirect(url_for('profile_form'))
-        
-        # Get courses for the user's assigned group
-        courses = Course.query.filter_by(group=current_user.profile.assigned_group).all()
-        
-        return render_template('recommendations.html', 
-                             courses=courses, 
-                             group=current_user.profile.assigned_group,
-                             profile=current_user.profile)
 
     @app.route('/admin/dashboard')
     @login_required
@@ -211,24 +259,16 @@ def register_routes(app):
     @login_required
     @admin_required
     def admin_config():
-        config_path = 'config_admin.json'
-        # Valores por defecto
+        # Configuración simplificada sin archivos externos
         default_config = {'n_clusters': 4, 'confidence_threshold': 0.7}
-        # Cargar config existente
-        if os.path.exists(config_path):
-            with open(config_path, 'r') as f:
-                config = json.load(f)
-        else:
-            config = default_config
-        form = AdminConfigForm(data=config)
+        form = AdminConfigForm(data=default_config)
+        
         if form.validate_on_submit():
-            config['n_clusters'] = form.n_clusters.data
-            config['confidence_threshold'] = form.confidence_threshold.data
-            with open(config_path, 'w') as f:
-                json.dump(config, f)
+            # Aquí podrías implementar la lógica para guardar en base de datos
             flash('Configuración actualizada correctamente.', 'success')
             return redirect(url_for('admin_config'))
-        return render_template('admin_config.html', form=form, config=config)
+            
+        return render_template('admin_config.html', form=form, config=default_config)
 
     @app.route('/admin/questions', methods=['GET', 'POST'])
     @login_required

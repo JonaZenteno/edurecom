@@ -1,12 +1,8 @@
 # Clustering module for EduRecom
-from .data_preprocessing import DataPreprocessor
-from .feature_engineering import FeatureEngineer
-from .clustering_engine import ClusteringEngine
 from .auto_assignment import AutoAssignment
+from .feature_engineering import FeatureEngineer
 
 __all__ = [
-    'DataPreprocessor',
-    'FeatureEngineer', 
-    'ClusteringEngine',
-    'AutoAssignment'
-] 
+    'AutoAssignment',
+    'FeatureEngineer'
+]
