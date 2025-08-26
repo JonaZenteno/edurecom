@@ -5,6 +5,12 @@
 {% block content %}
 <!-- Hero Banner -->
 <div class="hero-banner mb-5">
+    <div class="hero-slideshow">
+        <img src="{{ url_for('static', filename='images/1.jpg') }}" alt="Slide 1">
+        <img src="{{ url_for('static', filename='images/2.jpg') }}" alt="Slide 2">
+        <img src="{{ url_for('static', filename='images/3.jpg') }}" alt="Slide 3">
+        <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Slide 4">
+    </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
         <div class="container">
