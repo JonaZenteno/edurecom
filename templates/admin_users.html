@@ -1,36 +1,113 @@
 {% extends 'base.html' %}
 {% block title %}Usuarios - Admin{% endblock %}
 {% block content %}
-<h2 class="mb-4">Gestión de Usuarios</h2>
-<table class="table table-dark table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Usuario</th>
-      <th>Email</th>
-      <th>Rol</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in users %}
-    <tr>
-      <td>{{ user.id }}</td>
-      <td>{{ user.username }}</td>
-      <td>{{ user.email }}</td>
-      <td>{{ user.profile.role if user.profile else 'Sin perfil' }}</td>
-      <td>
-        {% if user.profile and user.profile.role != 'admin' %}
-        <form method="post" action="{{ url_for('make_admin', user_id=user.id) }}" style="display:inline;">
-          <button type="submit" class="btn btn-sm btn-warning">Hacer Admin</button>
-        </form>
-        {% else %}
-        <span class="text-success">Admin</span>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light">Volver al Dashboard</a>
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="text-secondary">Gestión de Usuarios</h2>
+            <p class="text-muted">Administra los usuarios del sistema y sus roles</p>
+        </div>
+    </div>
+
+    <div class="card bg-dark text-white">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>
+                                <strong>{{ user.username }}</strong>
+                                {% if user.id == current_user.id %}
+                                    <span class="badge bg-info ms-2">Tú</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.profile %}
+                                    <span class="badge {% if user.profile.role == 'admin' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                        {{ user.profile.role }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Sin perfil</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.profile %}
+                                    <span class="badge bg-success">Activo</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Incompleto</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    {% if user.profile and user.profile.role != 'admin' %}
+                                        <form method="post" action="{{ url_for('make_admin', user_id=user.id) }}" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-warning" 
+                                                    onclick="return confirm('¿Estás seguro de que quieres hacer administrador a {{ user.username }}?')">
+                                                <i class="fas fa-user-shield me-1"></i>Hacer Admin
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    
+                                    {% if user.id != current_user.id and (not user.profile or user.profile.role != 'admin') %}
+                                        <form method="post" action="{{ url_for('delete_user', user_id=user.id) }}" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger" 
+                                                    onclick="return confirm('¿Estás seguro de que quieres borrar al usuario {{ user.username }}? Esta acción no se puede deshacer.')">
+                                                <i class="fas fa-trash me-1"></i>Borrar
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    
+                                    {% if user.id == current_user.id %}
+                                        <span class="text-muted">Acciones limitadas</span>
+                                    {% elif user.profile and user.profile.role == 'admin' %}
+                                        <span class="text-success">Admin protegido</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Volver al Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Modal de confirmación para borrar usuarios -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="deleteUserModalLabel">Confirmar Borrado</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que quieres borrar este usuario? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Borrar Usuario</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -30,11 +30,31 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def non_admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            flash('Debes iniciar sesión para acceder a esta página.', 'danger')
+            return redirect(url_for('login'))
+        
+        if not current_user.profile:
+            flash('Debes completar tu perfil para acceder a esta página.', 'warning')
+            return redirect(url_for('profile_form'))
+        
+        if hasattr(current_user.profile, 'role') and current_user.profile.role == 'admin':
+            flash('Los administradores no pueden acceder a esta página.', 'warning')
+            return redirect(url_for('admin_dashboard'))
+        
+        return f(*args, **kwargs)
+    return decorated_function
+
 def register_routes(app):
     @app.route('/')
     def index():
         if current_user.is_authenticated:
-            if current_user.profile:
+            if current_user.profile and current_user.profile.role == 'admin':
+                return redirect(url_for('admin_dashboard'))
+            elif current_user.profile:
                 return redirect(url_for('recommendations'))
             else:
                 return redirect(url_for('profile_form'))
@@ -84,7 +104,12 @@ def register_routes(app):
                 login_user(user)
                 flash(f'¡Bienvenido/a, {user.username}!', 'success')
                 next_page = request.args.get('next')
-                return redirect(next_page) if next_page else redirect(url_for('index'))
+                if next_page:
+                    return redirect(next_page)
+                elif user.profile and user.profile.role == 'admin':
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    return redirect(url_for('index'))
             else:
                 flash('Nombre de usuario o contraseña incorrectos.', 'danger')
         
@@ -100,6 +125,11 @@ def register_routes(app):
     @app.route('/profile', methods=['GET', 'POST'])
     @login_required
     def profile_form():
+        # Verificar que el usuario no sea administrador
+        if current_user.profile and hasattr(current_user.profile, 'role') and current_user.profile.role == 'admin':
+            flash('Los administradores no pueden acceder a esta página.', 'warning')
+            return redirect(url_for('admin_dashboard'))
+        
         # Cargar preguntas dinámicas
         questions_path = 'questions_admin.json'
         if os.path.exists(questions_path):
@@ -190,6 +220,11 @@ def register_routes(app):
     @login_required
     def recommendations():
         try:
+            # Verificar que el usuario no sea administrador
+            if current_user.profile and hasattr(current_user.profile, 'role') and current_user.profile.role == 'admin':
+                flash('Los administradores no pueden acceder a esta página.', 'warning')
+                return redirect(url_for('admin_dashboard'))
+            
             # Verificar que el usuario tenga un perfil
             if not current_user.profile:
                 flash('Primero debes completar tu perfil para recibir recomendaciones.', 'warning')
@@ -224,6 +259,38 @@ def register_routes(app):
             flash('Ocurrió un error inesperado. Por favor, intenta nuevamente.', 'danger')
             return redirect(url_for('profile_form'))
 
+    @app.route('/course/<int:course_id>/view')
+    @non_admin_required
+    def track_course_view(course_id):
+        """Rastrea cuando un usuario hace clic en un curso"""
+        try:
+            course = Course.query.get_or_404(course_id)
+            
+            # Incrementar contador de visualizaciones
+            course.views_count += 1
+            
+            # Registrar la visualización en CourseView
+            course_view = CourseView(
+                course_id=course.id,
+                user_id=current_user.id
+            )
+            
+            db.session.add(course_view)
+            db.session.commit()
+            
+            # Redirigir al enlace del curso
+            return redirect(course.link)
+            
+        except Exception as e:
+            print(f"Error rastreando visualización del curso: {e}")
+            # Si hay error, solo redirigir al curso
+            try:
+                course = Course.query.get_or_404(course_id)
+                return redirect(course.link)
+            except:
+                flash('Error al acceder al curso. Por favor, intenta nuevamente.', 'danger')
+                return redirect(url_for('recommendations'))
+
     @app.route('/admin/dashboard')
     @login_required
     @admin_required
@@ -231,9 +298,37 @@ def register_routes(app):
         # Métricas: número de usuarios, clusters activos, recomendaciones más vistas
         num_usuarios = User.query.count()
         num_clusters = db.session.query(UserProfile.assigned_group).distinct().count()
-        # Top recomendaciones (cursos más vistos por grupo)
-        top_recomendaciones = db.session.query(Course.group, db.func.count(Course.id)).group_by(Course.group).all()
-        return render_template('admin_dashboard.html', num_usuarios=num_usuarios, num_clusters=num_clusters, top_recomendaciones=top_recomendaciones)
+        
+        # Top recomendaciones (cursos más vistos por grupo) - ESTADÍSTICAS REALES
+        try:
+            # Cursos más vistos por grupo
+            top_recomendaciones = db.session.query(
+                Course.group, 
+                db.func.sum(Course.views_count).label('total_views')
+            ).group_by(Course.group).order_by(db.func.sum(Course.views_count).desc()).all()
+            
+            # Top 5 cursos individuales más vistos
+            top_cursos = db.session.query(
+                Course.title, 
+                Course.group, 
+                Course.views_count
+            ).order_by(Course.views_count.desc()).limit(5).all()
+            
+            # Total de visualizaciones en el sistema
+            total_views = db.session.query(db.func.sum(Course.views_count)).scalar() or 0
+            
+        except Exception as e:
+            print(f"Error obteniendo estadísticas: {e}")
+            top_recomendaciones = []
+            top_cursos = []
+            total_views = 0
+        
+        return render_template('admin_dashboard.html', 
+                             num_usuarios=num_usuarios, 
+                             num_clusters=num_clusters, 
+                             top_recomendaciones=top_recomendaciones,
+                             top_cursos=top_cursos,
+                             total_views=total_views)
 
     @app.route('/admin/users')
     @login_required
@@ -253,6 +348,39 @@ def register_routes(app):
             flash('Rol de administrador asignado correctamente.', 'success')
         else:
             flash('El usuario no tiene perfil para asignar rol.', 'danger')
+        return redirect(url_for('admin_users'))
+
+    @app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
+    @login_required
+    @admin_required
+    def delete_user(user_id):
+        user = User.query.get_or_404(user_id)
+        
+        # Prevenir que el administrador se borre a sí mismo
+        if user.id == current_user.id:
+            flash('No puedes borrar tu propia cuenta de administrador.', 'danger')
+            return redirect(url_for('admin_users'))
+        
+        # Prevenir borrar otros administradores
+        if user.profile and user.profile.role == 'admin':
+            flash('No puedes borrar otros usuarios administradores.', 'danger')
+            return redirect(url_for('admin_users'))
+        
+        try:
+            # Borrar el perfil del usuario si existe
+            if user.profile:
+                db.session.delete(user.profile)
+            
+            # Borrar el usuario
+            db.session.delete(user)
+            db.session.commit()
+            
+            flash(f'Usuario "{user.username}" borrado exitosamente.', 'success')
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error borrando usuario: {e}")
+            flash('Error al borrar el usuario. Por favor, intenta nuevamente.', 'danger')
+        
         return redirect(url_for('admin_users'))
 
     @app.route('/admin/config', methods=['GET', 'POST'])

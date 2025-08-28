@@ -46,6 +46,16 @@ class UserProfile(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+class CourseView(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    viewed_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relaciones
+    course = db.relationship('Course', backref='views')
+    user = db.relationship('User', backref='course_views')
+
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
@@ -54,4 +64,5 @@ class Course(db.Model):
     group = db.Column(db.String(100), nullable=False)  # Group this course belongs to
     duration = db.Column(db.String(50), nullable=True)
     format = db.Column(db.String(50), nullable=True)
+    views_count = db.Column(db.Integer, default=0)  # Contador de visualizaciones
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

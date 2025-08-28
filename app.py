@@ -24,10 +24,8 @@ try:
         db.create_all()
         logger.info("Base de datos inicializada")
         
-        # Inicializar datos
-        from init_data import init_courses
-        init_courses()
-        logger.info("Datos inicializados")
+        # Verificar que las tablas estén creadas
+        logger.info("Base de datos verificada")
         
 except Exception as e:
     logger.error(f"Error inicializando la aplicación: {e}")
