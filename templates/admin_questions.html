@@ -25,7 +25,7 @@
         <form method="post" style="display:inline;">
           <input type="hidden" name="idx" value="{{ loop.index0 }}">
           <input type="hidden" name="action" value="delete">
-          <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+          <button type="submit" class="btn btn-sm btn-danger me-2">Eliminar</button>
         </form>
         <!-- Botón de edición (modal o inline, aquí solo ejemplo simple) -->
         <button class="btn btn-sm btn-warning" onclick="showEditForm({{ loop.index0 }}, '{{ q.name }}', '{{ q.type }}', '{{ q.label }}', '{{ q.choices|join(',') }}')">Editar</button>

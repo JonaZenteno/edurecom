@@ -241,6 +241,66 @@ body {
     color: rgba(255, 255, 255, 0.9);
 }
 
+/* Active navigation item styling */
+.navbar-nav .nav-link.active {
+    position: relative;
+    color: rgba(255, 255, 255, 1) !important;
+    font-weight: 500;
+    background: none !important;
+    border: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.navbar-nav .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 3px;
+    background: linear-gradient(90deg, #8738d1 0%, #a855f7 100%);
+    border-radius: 2px 2px 0 0;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        width: 0%;
+        opacity: 0;
+    }
+    to {
+        width: 80%;
+        opacity: 1;
+    }
+}
+
+/* Hover effect for active items */
+.navbar-nav .nav-link.active:hover {
+    color: rgba(255, 255, 255, 1) !important;
+    transform: none !important;
+}
+
+/* Ensure no Bootstrap active state interference */
+.navbar-nav .nav-link.active:focus {
+    color: rgba(255, 255, 255, 1) !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Fix navbar text alignment */
+.navbar-nav .navbar-text {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
 /* Profile Form Styling */
 .profile-hero {
     background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
@@ -408,6 +468,16 @@ body {
     
     .feature-card {
         padding: 1.5rem;
+    }
+    
+    /* Mobile navigation active state adjustments */
+    .navbar-nav .nav-link.active::after {
+        width: 60%;
+        height: 2px;
+    }
+    
+    .navbar-nav .nav-link.active {
+        font-weight: 600;
     }
 }
 

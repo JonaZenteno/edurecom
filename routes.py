@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from __init__ import db
-from models import User, UserProfile, Course
+from models import User, UserProfile, Course, CourseView
 from forms import RegistrationForm, LoginForm, ProfileForm, AdminConfigForm
 from utils import assign_group
 from functools import wraps
@@ -308,11 +308,7 @@ def register_routes(app):
             ).group_by(Course.group).order_by(db.func.sum(Course.views_count).desc()).all()
             
             # Top 5 cursos individuales más vistos
-            top_cursos = db.session.query(
-                Course.title, 
-                Course.group, 
-                Course.views_count
-            ).order_by(Course.views_count.desc()).limit(5).all()
+            top_cursos = Course.query.order_by(Course.views_count.desc()).limit(5).all()
             
             # Total de visualizaciones en el sistema
             total_views = db.session.query(db.func.sum(Course.views_count)).scalar() or 0

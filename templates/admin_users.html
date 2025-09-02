@@ -54,7 +54,7 @@
                                 <div class="btn-group" role="group">
                                     {% if user.profile and user.profile.role != 'admin' %}
                                         <form method="post" action="{{ url_for('make_admin', user_id=user.id) }}" style="display:inline;">
-                                            <button type="submit" class="btn btn-sm btn-warning" 
+                                            <button type="submit" class="btn btn-sm btn-warning me-2" 
                                                     onclick="return confirm('¿Estás seguro de que quieres hacer administrador a {{ user.username }}?')">
                                                 <i class="fas fa-user-shield me-1"></i>Hacer Admin
                                             </button>

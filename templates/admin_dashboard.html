@@ -40,7 +40,7 @@
 <!-- Nueva fila para cursos más vistos -->
 <div class="row mb-4">
   <div class="col-md-8">
-    <div class="card text-bg-info">
+    <div class="card text-bg-secondary">
       <div class="card-body">
         <h5 class="card-title">Top 5 Cursos Más Vistos</h5>
         {% if top_cursos %}
@@ -57,7 +57,7 @@
                 {% for curso in top_cursos %}
                 <tr>
                   <td>{{ curso.title[:50] }}{% if curso.title|length > 50 %}...{% endif %}</td>
-                  <td><span class="badge bg-secondary">{{ curso.group }}</span></td>
+                  <td><span class="badge text-bg-warning">{{ curso.group }}</span></td>
                   <td><span class="badge bg-success">{{ curso.views_count }}</span></td>
                 </tr>
                 {% endfor %}
