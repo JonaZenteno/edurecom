@@ -68,7 +68,7 @@ def _manual_assign_group(profile):
         # Filtrar valores None y usar valor por defecto de 3 si todos son None
         valid_digital_skills = [skill for skill in digital_skills if skill is not None]
         if not valid_digital_skills:
-            avg_digital_skills = 3  # Default value
+            avg_digital_skills = 3  # Valor por defecto
             print("⚠️  No se encontraron habilidades digitales válidas, usando valor por defecto: 3")
         else:
             avg_digital_skills = sum(valid_digital_skills) / len(valid_digital_skills)
@@ -83,7 +83,7 @@ def _manual_assign_group(profile):
         # Filtrar valores None y usar valor por defecto de 3 si todos son None
         valid_institutional_support = [support for support in institutional_support if support is not None]
         if not valid_institutional_support:
-            avg_institutional_support = 3  # Default value
+            avg_institutional_support = 3  # Valor por defecto
             print("⚠️  No se encontró apoyo institucional válido, usando valor por defecto: 3")
         else:
             avg_institutional_support = sum(valid_institutional_support) / len(valid_institutional_support)

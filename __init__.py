@@ -17,14 +17,14 @@ def create_app():
     app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-    # configure the database
+    # Configurar la base de datos
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///edurecom.db")
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
         "pool_recycle": 300,
         "pool_pre_ping": True,
     }
 
-    # initialize extensions
+    # Inicializar extensiones
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'login'
@@ -36,7 +36,7 @@ def create_app():
         from models import User
         return User.query.get(int(user_id))
 
-    # Setup logging
+    # Configurar el registro de logs
     try:
         from logging_config import setup_logging
         setup_logging(app)
@@ -44,7 +44,7 @@ def create_app():
     except Exception as e:
         app.logger.error(f"Error configurando logging: {e}")
 
-    # Import and register routes
+    # Importar y registrar rutas
     try:
         from routes import register_routes
         register_routes(app)

@@ -370,7 +370,8 @@ body {
 
 /* Success Banner */
 .success-banner {
-    background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+    background: -webkit-linear-gradient(90deg, #8738d1,#333f50); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(90deg, #8738d1,#333f50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     border-radius: 20px;
     position: relative;
     overflow: hidden;
