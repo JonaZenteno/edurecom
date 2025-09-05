@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField, RadioField, BooleanField, SubmitField, IntegerField, FloatField
-from wtforms.validators import DataRequired, Email, Length, EqualTo
+from wtforms import StringField, PasswordField, SelectField, RadioField, BooleanField, SubmitField, IntegerField, FloatField, TextAreaField
+from wtforms.validators import DataRequired, Email, Length, EqualTo, URL, Optional
 
 class RegistrationForm(FlaskForm):
     username = StringField('Nombre de usuario', validators=[
@@ -142,3 +142,29 @@ class AdminConfigForm(FlaskForm):
     n_clusters = IntegerField('Número de clusters (K-Means)', validators=[DataRequired()])
     confidence_threshold = FloatField('Umbral de confianza para asignación automática (0-1)', validators=[DataRequired()])
     submit = SubmitField('Guardar configuración')
+
+class CourseForm(FlaskForm):
+    title = StringField('Título', validators=[DataRequired(), Length(max=200)])
+    description = TextAreaField('Descripción', validators=[DataRequired()])
+    link = StringField('Enlace', validators=[DataRequired(), URL(message='Debe ser una URL válida')])
+    group = SelectField('Grupo de Formación', validators=[DataRequired()], choices=[
+        ('', 'Selecciona un grupo'),
+        ('Alfabetización Digital Básica', 'Alfabetización Digital Básica - Habilidades digitales fundamentales'),
+        ('Habilidades Digitales Avanzadas', 'Habilidades Digitales Avanzadas - TIC avanzadas para educadores'),
+        ('Fortalecimiento Institucional', 'Fortalecimiento Institucional - Liderazgo y gestión educativa'),
+        ('Innovación Educativa', 'Innovación Educativa - Estrategias innovadoras en educación'),
+        ('Ciudadanía Digital', 'Ciudadanía Digital - Ética y seguridad digital'),
+        ('Recursos Digitales', 'Recursos Digitales - Herramientas y plataformas educativas')
+    ])
+    duration = StringField('Duración', validators=[Optional(), Length(max=50)], 
+                          render_kw={'placeholder': 'Ej: 20 horas, 3 semanas, 1 mes'})
+    format = SelectField('Formato', validators=[Optional()], choices=[
+        ('', 'Selecciona un formato'),
+        ('en-linea', 'En línea - Curso virtual'),
+        ('talleres', 'Talleres presenciales - Sesiones presenciales'),
+        ('autoaprendizaje', 'Autoaprendizaje - Materiales para estudio independiente'),
+        ('hibrido', 'Híbrido - Combinación presencial y virtual'),
+        ('webinar', 'Webinar - Sesiones en vivo online'),
+        ('microlearning', 'Microlearning - Contenido en pequeñas dosis')
+    ])
+    submit = SubmitField('Guardar curso')

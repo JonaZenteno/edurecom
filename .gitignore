@@ -20,6 +20,7 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
@@ -27,6 +28,8 @@ share/python-wheels/
 MANIFEST
 
 # PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -47,7 +50,6 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
-cover/
 
 # Translations
 *.mo
@@ -70,7 +72,6 @@ instance/
 docs/_build/
 
 # PyBuilder
-.pybuilder/
 target/
 
 # Jupyter Notebook
@@ -84,15 +85,13 @@ ipython_config.py
 .python-version
 
 # pipenv
-Pipfile.lock
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
 
-# poetry
-poetry.lock
-
-# pdm
-.pdm.toml
-
-# PEP 582
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
 # Celery stuff
@@ -129,67 +128,24 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-.idea/
-
-# VS Code
-.vscode/
-
-# macOS
-.DS_Store
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Project specific
-*.pkl
-*.pickle
-*.h5
-*.hdf5
-*.joblib
-
-# Database files (keep structure but ignore data)
-instance/*.db
-instance/*.sqlite
-
-# Log files
+# EduRecom specific
 *.log
 logs/
+scripts/
+docs/
+*.pkl
+clustering_model.pkl
+improved_clustering_model.pkl
 
-# Temporary files
-*.tmp
-*.temp
-temp/
-tmp/
+# Development files
+questions_admin.json
+edurecom.log
 
-# Backup files
-*.bak
-*.backup
-*.old
-
-# Model files (large binary files)
-models/*.pkl
-models/*.pickle
-models/*.h5
-models/*.joblib
-
-# Data files (if they contain sensitive information)
-data/*.csv
-data/*.xlsx
-data/*.xls
-
-# Configuration files with secrets
-config.ini
-secrets.json
-.env.local
-.env.production
-
-
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

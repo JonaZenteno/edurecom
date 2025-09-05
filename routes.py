@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from __init__ import db
 from models import User, UserProfile, Course, CourseView
-from forms import RegistrationForm, LoginForm, ProfileForm, AdminConfigForm
+from forms import RegistrationForm, LoginForm, ProfileForm, AdminConfigForm, CourseForm
 from utils import assign_group
 from functools import wraps
 from flask_wtf import FlaskForm
@@ -426,3 +426,74 @@ def register_routes(app):
             flash('Preguntas actualizadas correctamente.', 'success')
             return redirect(url_for('admin_questions'))
         return render_template('admin_questions.html', questions=questions)
+
+    # Gestión de cursos (CRUD)
+    @app.route('/admin/courses')
+    @login_required
+    @admin_required
+    def admin_courses():
+        courses = Course.query.order_by(Course.created_at.desc()).all()
+        return render_template('admin_courses.html', courses=courses)
+
+    @app.route('/admin/courses/new', methods=['GET', 'POST'])
+    @login_required
+    @admin_required
+    def admin_course_new():
+        form = CourseForm()
+        if form.validate_on_submit():
+            try:
+                course = Course(
+                    title=form.title.data,
+                    description=form.description.data,
+                    link=form.link.data,
+                    group=form.group.data,
+                    duration=form.duration.data,
+                    format=form.format.data
+                )
+                db.session.add(course)
+                db.session.commit()
+                flash('Curso creado correctamente.', 'success')
+                return redirect(url_for('admin_courses'))
+            except Exception as e:
+                db.session.rollback()
+                print(f"Error creando curso: {e}")
+                flash('Ocurrió un error al crear el curso.', 'danger')
+        return render_template('admin_course_form.html', form=form, action='new')
+
+    @app.route('/admin/courses/<int:course_id>/edit', methods=['GET', 'POST'])
+    @login_required
+    @admin_required
+    def admin_course_edit(course_id):
+        course = Course.query.get_or_404(course_id)
+        form = CourseForm(obj=course)
+        if form.validate_on_submit():
+            try:
+                course.title = form.title.data
+                course.description = form.description.data
+                course.link = form.link.data
+                course.group = form.group.data
+                course.duration = form.duration.data
+                course.format = form.format.data
+                db.session.commit()
+                flash('Curso actualizado correctamente.', 'success')
+                return redirect(url_for('admin_courses'))
+            except Exception as e:
+                db.session.rollback()
+                print(f"Error actualizando curso: {e}")
+                flash('Ocurrió un error al actualizar el curso.', 'danger')
+        return render_template('admin_course_form.html', form=form, action='edit', course=course)
+
+    @app.route('/admin/courses/<int:course_id>/delete', methods=['POST'])
+    @login_required
+    @admin_required
+    def admin_course_delete(course_id):
+        course = Course.query.get_or_404(course_id)
+        try:
+            db.session.delete(course)
+            db.session.commit()
+            flash('Curso eliminado correctamente.', 'success')
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error eliminando curso: {e}")
+            flash('Ocurrió un error al eliminar el curso.', 'danger')
+        return redirect(url_for('admin_courses'))
