@@ -9,7 +9,7 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(82deg, rgba(66, 5, 41, 1) 0%, rgba(24, 0, 64, 1) 96%);">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
                 <img src="{{ url_for('static', filename='images/Recurso 3.svg') }}" alt="EduRecom Logo" height="40">
@@ -20,6 +20,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="navbar-text me-3">
+                                <i class="fas fa-user me-1"></i>{{ current_user.username }}
+                            </span>
+                        </li>
                         {% if not current_user.profile or current_user.profile.role != 'admin' %}
                             <li class="nav-item">
                                 <a class="nav-link {% if request.endpoint == 'profile_form' %}active{% endif %}" href="{{ url_for('profile_form') }}">
@@ -32,11 +37,6 @@
                                 </a>
                             </li>
                         {% endif %}
-                        <li class="nav-item">
-                            <span class="navbar-text me-3">
-                                <i class="fas fa-user me-1"></i>{{ current_user.username }}
-                            </span>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('logout') }}">
                                 <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
