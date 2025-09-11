@@ -13,10 +13,13 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+from flask_debugtoolbar import DebugToolbarExtension
 
 # Crear la aplicación
 try:
     app = create_app()
+    app.config['SECRET_KEY'] = 'dev'
+    toolbar = DebugToolbarExtension(app)
     logger.info("Aplicación creada exitosamente")
     
     with app.app_context():

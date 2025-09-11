@@ -18,7 +18,7 @@ def create_app():
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
     # Configurar la base de datos
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///edurecom.db")
+    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://jona:jonajona@localhost/edurecom"
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
         "pool_recycle": 300,
         "pool_pre_ping": True,
