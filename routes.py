@@ -183,11 +183,19 @@ def register_routes(app):
                             field_value = int(field_value) if field_value else 3
                         else:
                             # Para campos de texto, usar valor por defecto si está vacío
-                            field_value = field_value or 'profesor' if q['name'] == 'role' else \
-                                        field_value or 'urbana' if q['name'] == 'school_type' else \
-                                        field_value or 'municipal' if q['name'] == 'dependency' else \
-                                        field_value or '31-40' if q['name'] == 'age_range' else \
-                                        field_value or 'en-linea' if q['name'] == 'learning_format' else field_value
+                            if not field_value or field_value == '':
+                                if q['name'] == 'role':
+                                    field_value = 'profesor'
+                                elif q['name'] == 'school_type':
+                                    field_value = 'urbana'
+                                elif q['name'] == 'dependency':
+                                    field_value = 'municipal'
+                                elif q['name'] == 'age_range':
+                                    field_value = '31-40'
+                                elif q['name'] == 'learning_format':
+                                    field_value = 'en-linea'
+                                else:
+                                    field_value = field_value or 'default'
                     elif q['type'] == 'boolean':
                         # Para campos booleanos, usar False si es None
                         field_value = field_value if field_value is not None else False
