@@ -18,7 +18,7 @@ def create_app():
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
     # Configurar la base de datos
-    database_url = os.environ.get("DATABASE_URL", "mysql+pymysql://jona:jonajona@localhost/edurecom")
+    database_url = os.environ.get("DATABASE_URL", "sqlite:///edurecom.db")
     
     # Si es Railway, usar la URL directamente
     if "railway.app" in database_url or "DATABASE_URL" in os.environ:
