@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard Administrador{% endblock %}
+{% block content %}
+<h2 class="mb-4">Dashboard de Administrador</h2>
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-bg-secondary mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Usuarios registrados</h5>
+        <p class="card-text display-5">{{ num_usuarios }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-bg-secondary mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Clusters activos</h5>
+        <p class="card-text display-5">{{ num_clusters }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-bg-warning mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Visualizaciones por Grupo</h5>
+        <p class="card-text text-dark">Total: {{ total_views }} vistas</p>
+        <ul class="list-group">
+          {% for grupo, total_views in top_recomendaciones %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ grupo }}
+              <span class="badge bg-secondary rounded-pill">{{ total_views }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Nueva fila para cursos más vistos -->
+<div class="row mb-4">
+  <div class="col-md-8">
+    <div class="card text-bg-secondary">
+      <div class="card-body">
+        <h5 class="card-title">Top 5 Cursos Más Vistos</h5>
+        {% if top_cursos %}
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Curso</th>
+                  <th>Grupo</th>
+                  <th>Vistas</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for curso in top_cursos %}
+                <tr>
+                  <td>{{ curso.title[:50] }}{% if curso.title|length > 50 %}...{% endif %}</td>
+                  <td><span class="badge text-bg-warning">{{ curso.group }}</span></td>
+                  <td><span class="badge bg-success">{{ curso.views_count }}</span></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted">No hay datos de visualizaciones disponibles.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card text-bg-success">
+      <div class="card-body">
+        <h5 class="card-title">Estadísticas del Sistema</h5>
+        <div class="d-flex justify-content-between mb-2">
+          <span>Total de vistas:</span>
+          <strong>{{ total_views }}</strong>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span>Usuarios activos:</span>
+          <strong>{{ num_usuarios }}</strong>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span>Grupos activos:</span>
+          <strong>{{ num_clusters }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<a href="{{ url_for('admin_users') }}" class="btn btn-outline-secondary">Gestionar usuarios</a>
+<a href="{{ url_for('admin_courses') }}" class="btn btn-outline-secondary ms-2">Gestionar cursos</a>
+<a href="{{ url_for('admin_config') }}" class="btn btn-outline-secondary ms-2">Configurar algoritmo</a>
+<a href="{{ url_for('admin_questions') }}" class="btn btn-outline-secondary">Editar preguntas del formulario</a>
+{% endblock %}

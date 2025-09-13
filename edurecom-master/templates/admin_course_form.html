@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}{% if action == 'edit' %}Editar Curso{% else %}Nuevo Curso{% endif %}{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="mb-0">
+            <i class="fas fa-{% if action == 'edit' %}edit{% else %}plus{% endif %} me-2"></i>
+            {% if action == 'edit' %}Editar Curso{% else %}Nuevo Curso{% endif %}
+          </h2>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+              {{ form.title.label(class="form-label fw-bold") }}
+              {{ form.title(class="form-control") }}
+              <div class="form-text">Título descriptivo del curso (máximo 200 caracteres)</div>
+            </div>
+
+            <div class="mb-3">
+              {{ form.description.label(class="form-label fw-bold") }}
+              {{ form.description(class="form-control", rows=5) }}
+              <div class="form-text">Descripción detallada del contenido y objetivos del curso</div>
+            </div>
+
+            <div class="mb-3">
+              {{ form.link.label(class="form-label fw-bold") }}
+              {{ form.link(class="form-control") }}
+              <div class="form-text">URL completa del curso (ej: https://ejemplo.com/curso)</div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                {{ form.group.label(class="form-label fw-bold") }}
+                {{ form.group(class="form-select") }}
+                <div class="form-text">Selecciona el grupo de formación al que pertenece este curso</div>
+              </div>
+              <div class="col-md-6">
+                {{ form.format.label(class="form-label fw-bold") }}
+                {{ form.format(class="form-select") }}
+                <div class="form-text">Modalidad de impartición del curso</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              {{ form.duration.label(class="form-label fw-bold") }}
+              {{ form.duration(class="form-control") }}
+              <div class="form-text">Ejemplos: "20 horas", "3 semanas", "1 mes", "40 horas presenciales"</div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-1"></i>
+                {{ 'Guardar cambios' if action == 'edit' else 'Crear curso' }}
+              </button>
+              <a href="{{ url_for('admin_courses') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-times me-1"></i>
+                Cancelar
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
