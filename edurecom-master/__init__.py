@@ -20,6 +20,9 @@ def create_app():
     # Configurar la base de datos
     database_url = os.environ.get("DATABASE_URL", "sqlite:///edurecom.db")
     
+    # Debug: mostrar la URL de la base de datos
+    print(f"Database URL: {database_url}")
+    
     # Si es Railway, usar la URL directamente
     if "railway.app" in database_url or "DATABASE_URL" in os.environ:
         app.config["SQLALCHEMY_DATABASE_URI"] = database_url
