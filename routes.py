@@ -143,13 +143,24 @@ def register_routes(app):
             if os.path.exists(questions_path):
                 with open(questions_path, 'r', encoding='utf-8') as f:
                     questions = json.load(f)
-                print(f"Preguntas cargadas: {len(questions)} preguntas")
+                print(f"Preguntas cargadas desde archivo: {len(questions)} preguntas")
             else:
-                print("Archivo questions_admin.json no encontrado, usando preguntas por defecto")
+                print("Archivo questions_admin.json no encontrado, usando preguntas completas por defecto")
                 questions = [
                     {"name": "role", "type": "select", "label": "¿Cuál es tu rol en el establecimiento educativo?", "choices": ["profesor", "director", "asistente"]},
+                    {"name": "school_type", "type": "select", "label": "¿En qué tipo de establecimiento trabajas?", "choices": ["rural", "urbana", "cientifico-humanista", "tecnico-profesional"]},
+                    {"name": "dependency", "type": "select", "label": "¿Cuál es la dependencia de tu establecimiento?", "choices": ["municipal", "privada-subvencionada", "privada-pagada"]},
                     {"name": "age_range", "type": "select", "label": "¿En qué rango de edad te encuentras?", "choices": ["20-30", "31-40", "41-50", "51+"]},
-                    {"name": "digital_tools_skill", "type": "select", "label": "Herramientas TI básicas (1-5)", "choices": ["1", "2", "3", "4", "5"]}
+                    {"name": "digital_tools_skill", "type": "select", "label": "Evalúa tu habilidad con herramientas TI básicas (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "advanced_tic_skill", "type": "select", "label": "Evalúa tu habilidad con TIC avanzadas (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "digital_citizenship_skill", "type": "select", "label": "Evalúa tu conocimiento sobre ciudadanía digital (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "teaching_tech_skill", "type": "select", "label": "Evalúa tu habilidad para usar tecnología en la enseñanza (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "leadership_support", "type": "select", "label": "Evalúa el apoyo del liderazgo institucional en tecnología (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "resource_support", "type": "select", "label": "Evalúa los recursos tecnológicos disponibles (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "interest_digital_literacy", "type": "boolean", "label": "¿Te interesa la alfabetización digital?"},
+                    {"name": "interest_educational_innovation", "type": "boolean", "label": "¿Te interesa la innovación educativa?"},
+                    {"name": "interest_leadership", "type": "boolean", "label": "¿Te interesa el liderazgo?"},
+                    {"name": "learning_format", "type": "select", "label": "¿Qué formato de aprendizaje prefieres?", "choices": ["en-linea", "talleres", "autoaprendizaje"]}
                 ]
         except Exception as e:
             print(f"Error cargando preguntas: {e}")
@@ -222,7 +233,35 @@ def register_routes(app):
                             # Para campos booleanos, usar False si es None
                             field_value = field_value if field_value is not None else False
                         
+                        print(f"Campo {q['name']} procesado: {field_value} (tipo: {type(field_value)})")
+                        
                         setattr(profile, q['name'], field_value)
+                
+                # Asegurar que todos los campos obligatorios tengan valores
+                required_fields = {
+                    'role': 'profesor',
+                    'school_type': 'urbana', 
+                    'dependency': 'municipal',
+                    'age_range': '31-40',
+                    'digital_tools_skill': 3,
+                    'advanced_tic_skill': 3,
+                    'digital_citizenship_skill': 3,
+                    'teaching_tech_skill': 3,
+                    'leadership_support': 3,
+                    'resource_support': 3,
+                    'learning_format': 'en-linea'
+                }
+                
+                for field_name, default_value in required_fields.items():
+                    if not hasattr(profile, field_name) or getattr(profile, field_name) is None:
+                        print(f"Campo obligatorio {field_name} faltante, usando valor por defecto: {default_value}")
+                        setattr(profile, field_name, default_value)
+                
+                # Asegurar que los campos booleanos tengan valores
+                boolean_fields = ['interest_digital_literacy', 'interest_educational_innovation', 'interest_leadership']
+                for field_name in boolean_fields:
+                    if not hasattr(profile, field_name) or getattr(profile, field_name) is None:
+                        setattr(profile, field_name, False)
                 
                 # Asignar grupo y guardar
                 print("Asignando grupo al perfil...")
