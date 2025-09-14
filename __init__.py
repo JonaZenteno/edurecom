@@ -25,9 +25,16 @@ def create_app():
         app.config["SQLALCHEMY_DATABASE_URI"] = database_url
         print(f"Usando base de datos: {database_url[:50]}...")
     else:
-        # Para desarrollo local, usar SQLite
-        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///instance/edurecom.db"
-        print("Usando SQLite para desarrollo local")
+        # Para Railway, usar SQLite en directorio persistente
+        if os.environ.get("RAILWAY_ENVIRONMENT"):
+            # En Railway, usar directorio /tmp que es más persistente
+            db_path = "/tmp/edurecom.db"
+            app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
+            print(f"Usando SQLite persistente en Railway: {db_path}")
+        else:
+            # Para desarrollo local, usar SQLite
+            app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///instance/edurecom.db"
+            print("Usando SQLite para desarrollo local")
     
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
         "pool_recycle": 300,

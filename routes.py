@@ -309,17 +309,45 @@ def register_routes(app):
             
             # Get courses for the user's assigned group
             try:
-                courses = Course.query.filter_by(group=current_user.profile.assigned_group).all()
+                assigned_group = current_user.profile.assigned_group
+                print(f"🔍 Buscando cursos para el grupo: '{assigned_group}'")
+                
+                courses = Course.query.filter_by(group=assigned_group).all()
+                print(f"📚 Cursos encontrados para '{assigned_group}': {len(courses)}")
                 
                 if not courses:
-                    flash(f'No se encontraron cursos para el grupo "{current_user.profile.assigned_group}". Contacta al administrador.', 'warning')
-                    # Fallback: mostrar cursos de todos los grupos
-                    courses = Course.query.limit(10).all()
+                    print(f"⚠️ No se encontraron cursos para el grupo '{assigned_group}'")
+                    
+                    # Verificar qué grupos están disponibles
+                    available_groups = db.session.query(Course.group).distinct().all()
+                    available_groups = [g[0] for g in available_groups]
+                    print(f"🎯 Grupos disponibles en la base de datos: {available_groups}")
+                    
+                    # Verificar si hay algún problema con el nombre del grupo
+                    if assigned_group in available_groups:
+                        print(f"✅ El grupo '{assigned_group}' existe en la base de datos")
+                    else:
+                        print(f"❌ El grupo '{assigned_group}' NO existe en la base de datos")
+                        print("🔄 Intentando búsqueda parcial...")
+                        # Buscar grupos que contengan parte del nombre
+                        partial_matches = [g for g in available_groups if assigned_group.lower() in g.lower() or g.lower() in assigned_group.lower()]
+                        if partial_matches:
+                            print(f"🔍 Coincidencias parciales encontradas: {partial_matches}")
+                            # Usar la primera coincidencia
+                            courses = Course.query.filter_by(group=partial_matches[0]).all()
+                            print(f"📚 Cursos encontrados con coincidencia parcial: {len(courses)}")
+                    
+                    if not courses:
+                        flash(f'No se encontraron cursos para el grupo "{assigned_group}". Contacta al administrador.', 'warning')
+                        # Fallback: mostrar cursos de todos los grupos
+                        courses = Course.query.limit(10).all()
+                        print(f"🔄 Mostrando {len(courses)} cursos como fallback")
                     
             except Exception as e:
-                print(f"Error al consultar cursos: {e}")
+                print(f"❌ Error al consultar cursos: {e}")
                 flash('Error al cargar los cursos. Mostrando cursos disponibles.', 'warning')
                 courses = Course.query.limit(10).all()
+                print(f"🔄 Mostrando {len(courses)} cursos como fallback por error")
             
             return render_template('recommendations.html', 
                                  courses=courses, 
