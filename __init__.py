@@ -18,14 +18,16 @@ def create_app():
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
     # Configurar la base de datos
-    database_url = os.environ.get("DATABASE_URL", "mysql+mysqlconnector://jona:jonajona@localhost/edurecom")
+    database_url = os.environ.get("DATABASE_URL")
     
-    # Si es Railway, usar la URL directamente
-    if "railway.app" in database_url or "DATABASE_URL" in os.environ:
+    if database_url:
+        # Si hay DATABASE_URL (Railway o producción), usarla
         app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+        print(f"Usando base de datos: {database_url[:50]}...")
     else:
-        # Para desarrollo local
-        app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+        # Para desarrollo local, usar SQLite
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///instance/edurecom.db"
+        print("Usando SQLite para desarrollo local")
     
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
         "pool_recycle": 300,

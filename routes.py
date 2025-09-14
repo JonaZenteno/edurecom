@@ -52,11 +52,16 @@ def register_routes(app):
     @app.route('/')
     def index():
         if current_user.is_authenticated:
-            if current_user.profile and current_user.profile.role == 'admin':
-                return redirect(url_for('admin_dashboard'))
-            elif current_user.profile:
-                return redirect(url_for('recommendations'))
+            print(f"Usuario autenticado: {current_user.username}")
+            print(f"Tiene perfil: {current_user.profile is not None}")
+            if current_user.profile:
+                print(f"Rol del usuario: {current_user.profile.role}")
+                if current_user.profile.role == 'admin':
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    return redirect(url_for('recommendations'))
             else:
+                print("Usuario sin perfil, redirigiendo a formulario de perfil")
                 return redirect(url_for('profile_form'))
         return render_template('index.html')
 
@@ -125,6 +130,8 @@ def register_routes(app):
     @app.route('/profile', methods=['GET', 'POST'])
     @login_required
     def profile_form():
+        print(f"Accediendo a profile_form para usuario: {current_user.username}")
+        
         # Verificar que el usuario no sea administrador
         if current_user.profile and hasattr(current_user.profile, 'role') and current_user.profile.role == 'admin':
             flash('Los administradores no pueden acceder a esta página.', 'warning')
@@ -132,28 +139,46 @@ def register_routes(app):
         
         # Cargar preguntas dinámicas
         questions_path = 'questions_admin.json'
-        if os.path.exists(questions_path):
-            with open(questions_path, 'r', encoding='utf-8') as f:
-                questions = json.load(f)
-        else:
+        try:
+            if os.path.exists(questions_path):
+                with open(questions_path, 'r', encoding='utf-8') as f:
+                    questions = json.load(f)
+                print(f"Preguntas cargadas: {len(questions)} preguntas")
+            else:
+                print("Archivo questions_admin.json no encontrado, usando preguntas por defecto")
+                questions = [
+                    {"name": "role", "type": "select", "label": "¿Cuál es tu rol en el establecimiento educativo?", "choices": ["profesor", "director", "asistente"]},
+                    {"name": "age_range", "type": "select", "label": "¿En qué rango de edad te encuentras?", "choices": ["20-30", "31-40", "41-50", "51+"]},
+                    {"name": "digital_tools_skill", "type": "select", "label": "Herramientas TI básicas (1-5)", "choices": ["1", "2", "3", "4", "5"]}
+                ]
+        except Exception as e:
+            print(f"Error cargando preguntas: {e}")
+            flash('Error cargando el formulario. Por favor, recarga la página.', 'danger')
             questions = []
         # Crear formulario dinámico
         class DynamicProfileForm(FlaskForm):
             pass
-        for q in questions:
-            if q['type'] == 'select':
-                choices_data = q.get('choices', [])
-                if choices_data and isinstance(choices_data[0], dict):
-                    choices = [(c['value'], c['label']) for c in choices_data]
-                else:
-                    choices = [(c, c) for c in choices_data]
-                setattr(DynamicProfileForm, q['name'], SelectField(q['label'], choices=choices, validators=[DataRequired()]))
-            elif q['type'] == 'text':
-                setattr(DynamicProfileForm, q['name'], StringField(q['label'], validators=[DataRequired()]))
-            elif q['type'] == 'boolean':
-                setattr(DynamicProfileForm, q['name'], BooleanField(q['label']))
-        setattr(DynamicProfileForm, 'submit', SubmitField('Obtener recomendaciones'))
-        form = DynamicProfileForm()
+        
+        try:
+            for q in questions:
+                if q['type'] == 'select':
+                    choices_data = q.get('choices', [])
+                    if choices_data and isinstance(choices_data[0], dict):
+                        choices = [(c['value'], c['label']) for c in choices_data]
+                    else:
+                        choices = [(c, c) for c in choices_data]
+                    setattr(DynamicProfileForm, q['name'], SelectField(q['label'], choices=choices, validators=[DataRequired()]))
+                elif q['type'] == 'text':
+                    setattr(DynamicProfileForm, q['name'], StringField(q['label'], validators=[DataRequired()]))
+                elif q['type'] == 'boolean':
+                    setattr(DynamicProfileForm, q['name'], BooleanField(q['label']))
+            setattr(DynamicProfileForm, 'submit', SubmitField('Obtener recomendaciones'))
+            form = DynamicProfileForm()
+            print(f"Formulario creado exitosamente con {len(questions)} campos")
+        except Exception as e:
+            print(f"Error creando formulario: {e}")
+            flash('Error creando el formulario. Por favor, recarga la página.', 'danger')
+            return redirect(url_for('index'))
         # Si el usuario ya tiene perfil, poblar el formulario
         if current_user.profile and request.method == 'GET':
             profile = current_user.profile
@@ -161,42 +186,49 @@ def register_routes(app):
                 if hasattr(form, q['name']) and hasattr(profile, q['name']):
                     getattr(form, q['name']).data = getattr(profile, q['name'])
         if form.validate_on_submit():
-            if current_user.profile:
-                profile = current_user.profile
-            else:
-                profile = UserProfile(user_id=current_user.id)
-            
-            # Procesar cada pregunta y asignar valores con validación
-            for q in questions:
-                if hasattr(form, q['name']):
-                    # Si el usuario es admin y ya tiene perfil, no actualizar el rol
-                    if current_user.profile and hasattr(current_user.profile, 'role') and current_user.profile.role == 'admin' and q['name'] == 'role':
-                        continue
-
-                    field_value = getattr(form, q['name']).data
-                    
-                    # Convertir valores según el tipo de campo
-                    if q['type'] == 'select':
-                        if q['name'] in ['digital_tools_skill', 'advanced_tic_skill', 'digital_citizenship_skill', 
-                                       'teaching_tech_skill', 'leadership_support', 'resource_support']:
-                            # Convertir a entero para campos numéricos
-                            field_value = int(field_value) if field_value else 3
-                        else:
-                            # Para campos de texto, usar valor por defecto si está vacío
-                            field_value = field_value or 'profesor' if q['name'] == 'role' else \
-                                        field_value or 'urbana' if q['name'] == 'school_type' else \
-                                        field_value or 'municipal' if q['name'] == 'dependency' else \
-                                        field_value or '31-40' if q['name'] == 'age_range' else \
-                                        field_value or 'en-linea' if q['name'] == 'learning_format' else field_value
-                    elif q['type'] == 'boolean':
-                        # Para campos booleanos, usar False si es None
-                        field_value = field_value if field_value is not None else False
-                    
-                    setattr(profile, q['name'], field_value)
-            
-            # Asignar grupo y guardar
+            print(f"Formulario enviado por usuario: {current_user.username}")
             try:
+                if current_user.profile:
+                    profile = current_user.profile
+                    print("Actualizando perfil existente")
+                else:
+                    profile = UserProfile(user_id=current_user.id)
+                    print("Creando nuevo perfil")
+                
+                # Procesar cada pregunta y asignar valores con validación
+                for q in questions:
+                    if hasattr(form, q['name']):
+                        # Si el usuario es admin y ya tiene perfil, no actualizar el rol
+                        if current_user.profile and hasattr(current_user.profile, 'role') and current_user.profile.role == 'admin' and q['name'] == 'role':
+                            continue
+
+                        field_value = getattr(form, q['name']).data
+                        print(f"Campo {q['name']}: {field_value}")
+                        
+                        # Convertir valores según el tipo de campo
+                        if q['type'] == 'select':
+                            if q['name'] in ['digital_tools_skill', 'advanced_tic_skill', 'digital_citizenship_skill', 
+                                           'teaching_tech_skill', 'leadership_support', 'resource_support']:
+                                # Convertir a entero para campos numéricos
+                                field_value = int(field_value) if field_value else 3
+                            else:
+                                # Para campos de texto, usar valor por defecto si está vacío
+                                field_value = field_value or 'profesor' if q['name'] == 'role' else \
+                                            field_value or 'urbana' if q['name'] == 'school_type' else \
+                                            field_value or 'municipal' if q['name'] == 'dependency' else \
+                                            field_value or '31-40' if q['name'] == 'age_range' else \
+                                            field_value or 'en-linea' if q['name'] == 'learning_format' else field_value
+                        elif q['type'] == 'boolean':
+                            # Para campos booleanos, usar False si es None
+                            field_value = field_value if field_value is not None else False
+                        
+                        setattr(profile, q['name'], field_value)
+                
+                # Asignar grupo y guardar
+                print("Asignando grupo al perfil...")
                 profile.assigned_group = assign_group(profile)
+                print(f"Grupo asignado: {profile.assigned_group}")
+                
                 if not current_user.profile:
                     db.session.add(profile)
                 db.session.commit()
@@ -204,6 +236,7 @@ def register_routes(app):
                 # Verificar que el perfil se haya guardado correctamente
                 if profile.assigned_group:
                     flash('Perfil actualizado exitosamente. Aquí tienes tus recomendaciones personalizadas.', 'success')
+                    print("Perfil guardado exitosamente, redirigiendo a recomendaciones")
                     return redirect(url_for('recommendations'))
                 else:
                     flash('Error: No se pudo asignar un grupo de formación. Por favor, intenta nuevamente.', 'danger')
