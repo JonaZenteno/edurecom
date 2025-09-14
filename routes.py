@@ -499,32 +499,81 @@ def register_routes(app):
     @admin_required
     def admin_questions():
         questions_path = 'questions_admin.json'
+        print(f"🔍 Cargando preguntas para administrador desde: {questions_path}")
+        
         # Estructura: lista de preguntas, cada una con tipo, label, opciones (si aplica)
-        if os.path.exists(questions_path):
-            with open(questions_path, 'r', encoding='utf-8') as f:
-                questions = json.load(f)
-        else:
-            # Preguntas por defecto (ejemplo)
-            questions = [
-                {"name": "role", "type": "select", "label": "¿Cuál es tu rol en el establecimiento educativo?", "choices": ["profesor", "director", "asistente"]},
-                {"name": "age_range", "type": "select", "label": "¿En qué rango de edad te encuentras?", "choices": ["20-30", "31-40", "41-50", "51+"]},
-                {"name": "digital_tools_skill", "type": "select", "label": "Herramientas TI básicas", "choices": ["1", "2", "3", "4", "5"]}
-            ]
+        try:
+            if os.path.exists(questions_path):
+                with open(questions_path, 'r', encoding='utf-8') as f:
+                    questions = json.load(f)
+                print(f"✅ Preguntas cargadas desde archivo: {len(questions)} preguntas")
+            else:
+                print("⚠️ Archivo questions_admin.json no encontrado, usando preguntas completas por defecto")
+                # Preguntas completas por defecto
+                questions = [
+                    {"name": "role", "type": "select", "label": "¿Cuál es tu rol en el establecimiento educativo?", "choices": ["profesor", "director", "asistente"]},
+                    {"name": "school_type", "type": "select", "label": "¿En qué tipo de establecimiento trabajas?", "choices": ["rural", "urbana", "cientifico-humanista", "tecnico-profesional"]},
+                    {"name": "dependency", "type": "select", "label": "¿Cuál es la dependencia de tu establecimiento?", "choices": ["municipal", "privada-subvencionada", "privada-pagada"]},
+                    {"name": "age_range", "type": "select", "label": "¿En qué rango de edad te encuentras?", "choices": ["20-30", "31-40", "41-50", "51+"]},
+                    {"name": "digital_tools_skill", "type": "select", "label": "Evalúa tu habilidad con herramientas TI básicas (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "advanced_tic_skill", "type": "select", "label": "Evalúa tu habilidad con TIC avanzadas (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "digital_citizenship_skill", "type": "select", "label": "Evalúa tu conocimiento sobre ciudadanía digital (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "teaching_tech_skill", "type": "select", "label": "Evalúa tu habilidad para usar tecnología en la enseñanza (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "leadership_support", "type": "select", "label": "Evalúa el apoyo del liderazgo institucional en tecnología (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "resource_support", "type": "select", "label": "Evalúa los recursos tecnológicos disponibles (1-5)", "choices": ["1", "2", "3", "4", "5"]},
+                    {"name": "interest_digital_literacy", "type": "boolean", "label": "¿Te interesa la alfabetización digital?"},
+                    {"name": "interest_educational_innovation", "type": "boolean", "label": "¿Te interesa la innovación educativa?"},
+                    {"name": "interest_leadership", "type": "boolean", "label": "¿Te interesa el liderazgo?"},
+                    {"name": "learning_format", "type": "select", "label": "¿Qué formato de aprendizaje prefieres?", "choices": ["en-linea", "talleres", "autoaprendizaje"]}
+                ]
+        except Exception as e:
+            print(f"❌ Error cargando preguntas: {e}")
+            flash('Error cargando las preguntas. Usando preguntas por defecto.', 'danger')
+            questions = []
         if request.method == 'POST':
-            # Recibir cambios desde el formulario (agregar, editar, eliminar preguntas)
-            action = request.form.get('action')
-            if action == 'add':
-                questions.append({"name": request.form['name'], "type": request.form['type'], "label": request.form['label'], "choices": request.form.get('choices', '').split(',') if request.form.get('choices') else []})
-            elif action == 'edit':
-                idx = int(request.form['idx'])
-                questions[idx] = {"name": request.form['name'], "type": request.form['type'], "label": request.form['label'], "choices": request.form.get('choices', '').split(',') if request.form.get('choices') else []}
-            elif action == 'delete':
-                idx = int(request.form['idx'])
-                questions.pop(idx)
-            with open(questions_path, 'w', encoding='utf-8') as f:
-                json.dump(questions, f, ensure_ascii=False, indent=2)
-            flash('Preguntas actualizadas correctamente.', 'success')
-            return redirect(url_for('admin_questions'))
+            try:
+                # Recibir cambios desde el formulario (agregar, editar, eliminar preguntas)
+                action = request.form.get('action')
+                print(f"🔧 Acción del administrador: {action}")
+                
+                if action == 'add':
+                    new_question = {
+                        "name": request.form['name'], 
+                        "type": request.form['type'], 
+                        "label": request.form['label'], 
+                        "choices": request.form.get('choices', '').split(',') if request.form.get('choices') else []
+                    }
+                    questions.append(new_question)
+                    print(f"✅ Pregunta agregada: {new_question['name']}")
+                    
+                elif action == 'edit':
+                    idx = int(request.form['idx'])
+                    edited_question = {
+                        "name": request.form['name'], 
+                        "type": request.form['type'], 
+                        "label": request.form['label'], 
+                        "choices": request.form.get('choices', '').split(',') if request.form.get('choices') else []
+                    }
+                    questions[idx] = edited_question
+                    print(f"✅ Pregunta editada: {edited_question['name']}")
+                    
+                elif action == 'delete':
+                    idx = int(request.form['idx'])
+                    deleted_question = questions[idx]
+                    questions.pop(idx)
+                    print(f"✅ Pregunta eliminada: {deleted_question['name']}")
+                
+                # Guardar preguntas actualizadas
+                with open(questions_path, 'w', encoding='utf-8') as f:
+                    json.dump(questions, f, ensure_ascii=False, indent=2)
+                print(f"💾 Preguntas guardadas: {len(questions)} preguntas")
+                flash('Preguntas actualizadas correctamente.', 'success')
+                return redirect(url_for('admin_questions'))
+                
+            except Exception as e:
+                print(f"❌ Error procesando cambios en preguntas: {e}")
+                flash('Error al procesar los cambios. Por favor, intenta nuevamente.', 'danger')
+                return redirect(url_for('admin_questions'))
         return render_template('admin_questions.html', questions=questions)
 
     # Gestión de cursos (CRUD)
