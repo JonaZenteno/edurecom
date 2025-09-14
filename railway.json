@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python init_db.py && python scripts_utilidad/check_courses.py && python scripts_utilidad/create_test_users.py && python scripts_utilidad/setup_questions.py && gunicorn --bind 0.0.0.0:$PORT app:app",
+    "startCommand": "python init_db.py && python check_courses.py && python create_test_users.py && python setup_questions.py && gunicorn --bind 0.0.0.0:$PORT app:app",
     "healthcheckPath": "/",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",
