@@ -24,8 +24,15 @@ def load_courses_from_json():
                     print(f"Omitiendo curso por falta de datos esenciales: {course_info}")
                     continue
 
-                # Crear instancia del curso si no existe
-                if not Course.query.filter_by(title=title).first():
+                # Actualizar o crear instancia del curso
+                course = Course.query.filter_by(title=title).first()
+                if course:
+                    course.description = description
+                    course.link = link
+                    course.group = group
+                    course.duration = duration
+                    course.format = course_format
+                else:
                     new_course = Course(
                         title=title,
                         description=description,

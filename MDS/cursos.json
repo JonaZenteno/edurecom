@@ -1,7 +1,7 @@
 [
     {
       "titulo": "Plan Piloto UNESCO de Fortalecimiento de Competencias Digitales Docentes",
-      "descripcion": "Iniciativa de la UNESCO y el Ministerio de Educación de Chile que ofrece un plan piloto GRATUITO para fortalecer las competencias digitales de docentes. Incluye autoevaluación y formación personalizada en línea:contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}.",
+      "descripcion": "Iniciativa de la UNESCO y el Ministerio de Educación de Chile que ofrece un plan piloto GRATUITO para fortalecer las competencias digitales de docentes. Incluye autoevaluación y formación personalizada en línea",
       "institucion": "UNESCO / Ministerio de Educación de Chile",
       "grupo_formacion": "Alfabetización Digital Básica",
       "certificacion": "Algunos cursos asociados entregan certificado propio",
@@ -10,7 +10,7 @@
     },
     {
       "titulo": "Fundamentos de Ciencias de la Computación para docentes de Educación Básica",
-      "descripcion": "Curso gratuito en línea del Ministerio de Educación (CPEIP) para docentes de nivel básico, que cubre los conceptos fundamentales de la computación. Ofrece formación certificada por el Mineduc:contentReference[oaicite:2]{index=2}.",
+      "descripcion": "Curso gratuito en línea del Ministerio de Educación (CPEIP) para docentes de nivel básico, que cubre los conceptos fundamentales de la computación. Ofrece formación certificada por el Mineduc",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Alfabetización Digital Básica",
       "certificacion": "Certificación oficial del Mineduc",
@@ -19,7 +19,7 @@
     },
     {
       "titulo": "Introducción a la Inteligencia Artificial y su uso educativo",
-      "descripcion": "Curso online gratuito de CPEIP que introduce a los docentes en los conceptos y aplicaciones básicas de la Inteligencia Artificial en educación:contentReference[oaicite:3]{index=3}.",
+      "descripcion": "Curso online gratuito de CPEIP que introduce a los docentes en los conceptos y aplicaciones básicas de la Inteligencia Artificial en educación",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Habilidades Digitales Avanzadas",
       "certificacion": "Certificación oficial del Mineduc",
@@ -28,7 +28,7 @@
     },
     {
       "titulo": "Comunidades Virtuales de Aprendizaje: Uso de la Inteligencia Artificial para la enseñanza",
-      "descripcion": "Curso gratuito en línea (CPEIP) que explora el uso de la IA para diseñar y preparar entornos virtuales de aprendizaje innovadores:contentReference[oaicite:4]{index=4}.",
+      "descripcion": "Curso gratuito en línea (CPEIP) que explora el uso de la IA para diseñar y preparar entornos virtuales de aprendizaje innovadores",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Habilidades Digitales Avanzadas",
       "certificacion": "Certificación oficial del Mineduc",
@@ -37,7 +37,7 @@
     },
     {
       "titulo": "Aplicaciones de la Inteligencia Artificial para la enseñanza y el aprendizaje",
-      "descripcion": "Curso gratuito online (CPEIP) que muestra aplicaciones prácticas de la IA en procesos pedagógicos y aprendizaje:contentReference[oaicite:5]{index=5}.",
+      "descripcion": "Curso gratuito online (CPEIP) que muestra aplicaciones prácticas de la IA en procesos pedagógicos y aprendizaje",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Habilidades Digitales Avanzadas",
       "certificacion": "Certificación oficial del Mineduc",
@@ -46,16 +46,16 @@
     },
     {
       "titulo": "Curso de Ciberseguridad para Educación Superior: Aspectos Normativos y Fundamentos de Seguridad",
-      "descripcion": "Curso en línea gratuito (OpenUChile/REUNA) enfocado en normativas y fundamentos de ciberseguridad para instituciones de educación superior:contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}. Está abierto a toda la comunidad y opcionalmente ofrece certificado pagado.",
+      "descripcion": "Curso en línea gratuito (OpenUChile/REUNA) enfocado en normativas y fundamentos de ciberseguridad para instituciones de educación superior. Está abierto a toda la comunidad y opcionalmente ofrece certificado pagado.",
       "institucion": "OpenUChile / Red Universitaria Nacional (REUNA)",
       "grupo_formacion": "Ciudadanía Digital",
-      "certificacion": "Certificado opcional con costo adicional (45.000 CLP):contentReference[oaicite:8]{index=8}",
+      "certificacion": "Certificado opcional con costo adicional (45.000 CLP)",
       "costo": "Gratuito (certificación paga opcional)",
       "enlace": "https://open.uchile.cl/"
     },
     {
       "titulo": "Inteligencia Artificial y gestión escolar",
-      "descripcion": "Curso online gratuito (Educarchile/Ministerio de Educación) dirigido a equipos directivos, que enseña a integrar herramientas de IA en la gestión escolar:contentReference[oaicite:9]{index=9}.",
+      "descripcion": "Curso online gratuito (Educarchile/Ministerio de Educación) dirigido a equipos directivos, que enseña a integrar herramientas de IA en la gestión escolar",
       "institucion": "Educarchile (Ministerio de Educación de Chile)",
       "grupo_formacion": "Fortalecimiento Institucional",
       "certificacion": "Certificación oficial del Mineduc",
@@ -64,7 +64,7 @@
     },
     {
       "titulo": "Inteligencia Artificial y liderazgo educativo: Fundamentos para una transformación digital y pedagógica",
-      "descripcion": "Curso en línea gratuito (Educarchile/Ministerio de Educación) para directivos escolares, enfocado en el potencial de la IA en la administración y liderazgo pedagógico:contentReference[oaicite:10]{index=10}.",
+      "descripcion": "Curso en línea gratuito (Educarchile/Ministerio de Educación) para directivos escolares, enfocado en el potencial de la IA en la administración y liderazgo pedagógico",
       "institucion": "Educarchile (Ministerio de Educación de Chile)",
       "grupo_formacion": "Fortalecimiento Institucional",
       "certificacion": "Certificación oficial del Mineduc",
@@ -73,7 +73,7 @@
     },
     {
       "titulo": "Claves para facilitar el aprendizaje de competencias digitales desde la Coordinación Informática",
-      "descripcion": "Recurso gratuito online (Educarchile) para coordinadores informáticos, que brinda herramientas para planificar la capacitación docente en habilidades digitales:contentReference[oaicite:11]{index=11}.",
+      "descripcion": "Recurso gratuito online (Educarchile) para coordinadores informáticos, que brinda herramientas para planificar la capacitación docente en habilidades digitales",
       "institucion": "Educarchile (Ministerio de Educación de Chile)",
       "grupo_formacion": "Fortalecimiento Institucional",
       "certificacion": "Certificación oficial del Mineduc",
@@ -82,7 +82,7 @@
     },
     {
       "titulo": "Redes y soporte para apoyar la gestión educativa",
-      "descripcion": "Recurso en línea gratuito (Educarchile) para coordinadores de informática, enfocado en la gestión de infraestructura tecnológica escolar:contentReference[oaicite:12]{index=12}.",
+      "descripcion": "Recurso en línea gratuito (Educarchile) para coordinadores de informática, enfocado en la gestión de infraestructura tecnológica escolar",
       "institucion": "Educarchile (Ministerio de Educación de Chile)",
       "grupo_formacion": "Fortalecimiento Institucional",
       "certificacion": "Certificación oficial del Mineduc",
@@ -91,7 +91,7 @@
     },
     {
       "titulo": "Implementando ABP en el aula de inglés – Project-Based Learning (PBL)",
-      "descripcion": "Curso online gratuito (CPEIP) que guía a los docentes de inglés en la aplicación práctica de la metodología de Aprendizaje Basado en Proyectos:contentReference[oaicite:13]{index=13}.",
+      "descripcion": "Curso online gratuito (CPEIP) que guía a los docentes de inglés en la aplicación práctica de la metodología de Aprendizaje Basado en Proyectos",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Innovación Educativa",
       "certificacion": "Certificación oficial del Mineduc",
@@ -100,7 +100,7 @@
     },
     {
       "titulo": "Aprendizaje Basado en Proyectos (ABP) en la práctica: diseñando experiencias de aprendizaje significativo",
-      "descripcion": "Curso gratuito (CPEIP) que enseña a diseñar experiencias de aprendizaje activo y significativo aplicando el ABP:contentReference[oaicite:14]{index=14}.",
+      "descripcion": "Curso gratuito (CPEIP) que enseña a diseñar experiencias de aprendizaje activo y significativo aplicando el ABP",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Innovación Educativa",
       "certificacion": "Certificación oficial del Mineduc",
@@ -109,7 +109,7 @@
     },
     {
       "titulo": "Técnicas de Aprendizaje Activo con tecnologías digitales",
-      "descripcion": "Curso online gratuito (CPEIP) que presenta técnicas y herramientas digitales para dinamizar el aprendizaje en el aula:contentReference[oaicite:15]{index=15}.",
+      "descripcion": "Curso online gratuito (CPEIP) que presenta técnicas y herramientas digitales para dinamizar el aprendizaje en el aula",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Innovación Educativa",
       "certificacion": "Certificación oficial del Mineduc",
@@ -118,7 +118,7 @@
     },
     {
       "titulo": "Taller: Diseñar recursos audiovisuales con EdPuzzle, Renderforest y Powtoon",
-      "descripcion": "Taller virtual gratuito (Centro de Innovación Mineduc/CPEIP) que enseña a docentes a crear videos y recursos audiovisuales usando herramientas digitales:contentReference[oaicite:16]{index=16}.",
+      "descripcion": "Taller virtual gratuito (Centro de Innovación Mineduc/CPEIP) que enseña a docentes a crear videos y recursos audiovisuales usando herramientas digitales",
       "institucion": "Ministerio de Educación de Chile (CPEIP/Centro de Innovación)",
       "grupo_formacion": "Innovación Educativa",
       "certificacion": "Certificación oficial del Mineduc",
@@ -127,7 +127,7 @@
     },
     {
       "titulo": "Ciberacoso: prevención y actuación desde la comunidad educativa",
-      "descripcion": "Curso online gratuito (CPEIP) para docentes y directivos, enfocado en la prevención y manejo del ciberacoso en el ámbito escolar:contentReference[oaicite:17]{index=17}.",
+      "descripcion": "Curso online gratuito (CPEIP) para docentes y directivos, enfocado en la prevención y manejo del ciberacoso en el ámbito escolar",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Ciudadanía Digital",
       "certificacion": "Certificación oficial del Mineduc",
@@ -136,7 +136,7 @@
     },
     {
       "titulo": "Ciudadanía Digital en la escuela",
-      "descripcion": "Curso en línea gratuito (CPEIP) que busca desarrollar una cultura de ciudadanía digital responsable dentro de la comunidad educativa:contentReference[oaicite:18]{index=18}.",
+      "descripcion": "Curso en línea gratuito (CPEIP) que busca desarrollar una cultura de ciudadanía digital responsable dentro de la comunidad educativa",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Ciudadanía Digital",
       "certificacion": "Certificación oficial del Mineduc",
@@ -145,7 +145,7 @@
     },
     {
       "titulo": "Actúa frente al Ciberbullying",
-      "descripcion": "Curso online gratuito de Fundación Telefónica (ProFuturo) que aborda el acoso escolar mediante medios digitales, enfocándose en prevención, detección y buenas prácticas en redes sociales:contentReference[oaicite:19]{index=19}.",
+      "descripcion": "Curso online gratuito de Fundación Telefónica (ProFuturo) que aborda el acoso escolar mediante medios digitales, enfocándose en prevención, detección y buenas prácticas en redes sociales",
       "institucion": "Fundación Telefónica – ProFuturo",
       "grupo_formacion": "Ciudadanía Digital",
       "certificacion": "Certificado digital de finalización",
@@ -154,7 +154,7 @@
     },
     {
       "titulo": "Uso y gestión de herramientas digitales para líderes escolares y equipos directivos",
-      "descripcion": "Curso gratuito (Red Docencia Digital AP / Fundación Chile) que enseña a líderes escolares a adoptar y gestionar herramientas TIC en la escuela, enfocándose en la colaboración y la infraestructura necesaria:contentReference[oaicite:20]{index=20}.",
+      "descripcion": "Curso gratuito (Red Docencia Digital AP / Fundación Chile) que enseña a líderes escolares a adoptar y gestionar herramientas TIC en la escuela, enfocándose en la colaboración y la infraestructura necesaria",
       "institucion": "Fundación Chile / Red Docencia Digital Alianza del Pacífico",
       "grupo_formacion": "Fortalecimiento Institucional",
       "certificacion": "Certificación oficial del Mineduc",
@@ -163,7 +163,7 @@
     },
     {
       "titulo": "Uso y gestión de herramientas digitales para fortalecer el vínculo con la comunidad educativa",
-      "descripcion": "Curso gratuito (Red Docencia Digital AP / Fundación Chile) sobre cómo usar herramientas digitales (p.ej. Google Workspace) para mejorar la comunicación y colaboración con apoderados y comunidad escolar:contentReference[oaicite:21]{index=21}.",
+      "descripcion": "Curso gratuito (Red Docencia Digital AP / Fundación Chile) sobre cómo usar herramientas digitales (p.ej. Google Workspace) para mejorar la comunicación y colaboración con apoderados y comunidad escolar",
       "institucion": "Fundación Chile / Red Docencia Digital Alianza del Pacífico",
       "grupo_formacion": "Fortalecimiento Institucional",
       "certificacion": "Certificación oficial del Mineduc",
@@ -172,7 +172,7 @@
     },
     {
       "titulo": "Uso y gestión de herramientas digitales para el aprendizaje en el aula",
-      "descripcion": "Curso online gratuito (Red Docencia Digital AP / Fundación Chile) que muestra cómo usar efectivamente las TIC en clase para motivar y potenciar el aprendizaje, incluyendo metodologías activas, programación y gamificación:contentReference[oaicite:22]{index=22}.",
+      "descripcion": "Curso online gratuito (Red Docencia Digital AP / Fundación Chile) que muestra cómo usar efectivamente las TIC en clase para motivar y potenciar el aprendizaje, incluyendo metodologías activas, programación y gamificación",
       "institucion": "Fundación Chile / Red Docencia Digital Alianza del Pacífico",
       "grupo_formacion": "Recursos Digitales",
       "certificacion": "Certificación oficial del Mineduc",
@@ -181,7 +181,7 @@
     },
     {
       "titulo": "Herramientas digitales para la docencia universitaria",
-      "descripcion": "Curso online de la Universidad de Chile para profesores universitarios, centrado en diseñar experiencias de aprendizaje que integren herramientas digitales para la colaboración, evaluación y participación:contentReference[oaicite:23]{index=23}.",
+      "descripcion": "Curso online de la Universidad de Chile para profesores universitarios, centrado en diseñar experiencias de aprendizaje que integren herramientas digitales para la colaboración, evaluación y participación",
       "institucion": "Universidad de Chile",
       "grupo_formacion": "Recursos Digitales",
       "certificacion": "Certificado de Extensión Académica",
@@ -190,7 +190,7 @@
     },
     {
       "titulo": "Diploma en docencia mediada por tecnologías",
-      "descripcion": "Programa online (Universidad de Chile) que enseña a diseñar situaciones de aprendizaje mediadas por tecnologías digitales, promoviendo la alfabetización y ciudadanía digital del estudiantado:contentReference[oaicite:24]{index=24}.",
+      "descripcion": "Programa online (Universidad de Chile) que enseña a diseñar situaciones de aprendizaje mediadas por tecnologías digitales, promoviendo la alfabetización y ciudadanía digital del estudiantado",
       "institucion": "Universidad de Chile",
       "grupo_formacion": "Recursos Digitales",
       "certificacion": "Diploma otorgado por la Universidad de Chile",
@@ -199,7 +199,7 @@
     },
     {
       "titulo": "Taller: Herramientas digitales para gamificar la enseñanza con Educaplay, Kahoot y Wayground",
-      "descripcion": "Taller virtual gratuito (CPEIP) para docentes que enseña a usar plataformas de gamificación educativa como Educaplay y Kahoot en el aula:contentReference[oaicite:25]{index=25}.",
+      "descripcion": "Taller virtual gratuito (CPEIP) para docentes que enseña a usar plataformas de gamificación educativa como Educaplay y Kahoot en el aula",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Recursos Digitales",
       "certificacion": "Certificación oficial del Mineduc",
@@ -208,7 +208,7 @@
     },
     {
       "titulo": "Fundamentos de administración de Google Workspace (Básico)",
-      "descripcion": "Curso en línea gratuito (CPEIP) dirigido a coordinadores informáticos, que cubre las funcionalidades básicas de Google Workspace for Education:contentReference[oaicite:26]{index=26}.",
+      "descripcion": "Curso en línea gratuito (CPEIP) dirigido a coordinadores informáticos, que cubre las funcionalidades básicas de Google Workspace for Education",
       "institucion": "Mineduc (CPEIP)",
       "grupo_formacion": "Recursos Digitales",
       "certificacion": "Certificación oficial del Mineduc",
@@ -776,5 +776,3 @@
             "target_audience": "Profesionales de la educación"
           }
   ]
-  
-  
